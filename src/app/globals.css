@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+:root {
+  /* ===== هوية "بيب بيب" — فاتح ومبهج (أبيض/أصفر/بني) بلمسة premium ===== */
+  --color-bg: #fffdf7;
+  --color-bg-elev: #fff8e8;
+  --color-surface: #ffffff;
+  --color-surface-2: #fff3d6;
+  --color-border: #f0e3c8;
+  --color-border-soft: #f6ecd6;
+
+  --color-text: #2a1707;
+  --color-text-muted: #7a6a5c;
+  --color-text-dim: #a99b8b;
+
+  /* brand accents */
+  --color-brand-yellow: #ffc413;
+  --color-brand-yellow-dark: #e2a300;
+  --color-brand-yellow-soft: #fff3d6;
+  --color-brand-ink: #532813;
+  --color-brand-ink-soft: #6e3a1c;
+}
+
+@theme inline {
+  --font-sans: var(--font-cairo);
+
+  --color-bg: var(--color-bg);
+  --color-bg-elev: var(--color-bg-elev);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-border: var(--color-border);
+  --color-border-soft: var(--color-border-soft);
+
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-dim: var(--color-text-dim);
+
+  --color-brand-yellow: var(--color-brand-yellow);
+  --color-brand-yellow-dark: var(--color-brand-yellow-dark);
+  --color-brand-yellow-soft: var(--color-brand-yellow-soft);
+  --color-brand-ink: var(--color-brand-ink);
+  --color-brand-ink-soft: var(--color-brand-ink-soft);
+}
+
+html {
+  scroll-behavior: auto;
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* خلفية شبكية خافتة */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--color-border-soft) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border-soft) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glow-yellow {
+  box-shadow: 0 10px 40px -12px rgba(255, 196, 19, 0.6);
+}
+.glow-soft {
+  box-shadow: 0 20px 50px -20px rgba(83, 40, 19, 0.25);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-brand-yellow-dark), var(--color-brand-ink) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  background: rgba(255, 196, 19, 0.4);
+  color: var(--color-brand-ink);
+}
+
+/* عشان lenis يقدر ياخد التحكم في السكرول بسلاسة */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}

@@ -1,0 +1,97 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { useLang } from "@/lib/i18n";
+import { calculator } from "@/lib/content";
+
+export default function Calculator() {
+  const { t, lang } = useLang();
+
+  const [serviceKey, setServiceKey] = useState(calculator.serviceOptions[0].key);
+  const [distance, setDistance] = useState(8);
+  const [peak, setPeak] = useState(false);
+
+  const service = calculator.serviceOptions.find((s) => s.key === serviceKey)!;
+
+  const fare = useMemo(() => {
+    const raw = service.base + service.perKm * distance;
+    return Math.round(peak ? raw * 1.25 : raw);
+  }, [service, distance, peak]);
+
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-US").format(n);
+
+  return (
+    <section id="calculator" className="relative border-t border-border bg-bg py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <SectionHeading eyebrow={calculator.eyebrow} title={calculator.title} body={calculator.body} />
+
+        <div className="mt-16 grid gap-6 lg:grid-cols-2">
+          {/* المدخلات */}
+          <Reveal>
+            <div className="rounded-3xl border border-border bg-surface p-8">
+              <label className="text-sm font-medium text-text-muted">{t(calculator.serviceLabel)}</label>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {calculator.serviceOptions.map((opt) => (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => setServiceKey(opt.key)}
+                    className={
+                      "rounded-full px-5 py-2.5 text-sm font-bold transition-colors " +
+                      (opt.key === serviceKey
+                        ? "bg-brand-yellow text-brand-ink"
+                        : "border border-border text-text-muted hover:text-brand-ink")
+                    }
+                  >
+                    {t(opt.label)}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-text-muted">{t(calculator.inputs.distance)}</label>
+                  <span className="text-lg font-extrabold text-brand-ink">{fmt(distance)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={60}
+                  step={1}
+                  value={distance}
+                  onChange={(e) => setDistance(Number(e.target.value))}
+                  className="mt-3 w-full accent-brand-yellow-dark"
+                />
+              </div>
+
+              <label className="mt-8 flex cursor-pointer items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={peak}
+                  onChange={(e) => setPeak(e.target.checked)}
+                  className="size-5 accent-brand-yellow-dark"
+                />
+                <span className="text-sm font-medium text-text">{t(calculator.peakLabel)}</span>
+              </label>
+            </div>
+          </Reveal>
+
+          {/* النتيجة */}
+          <Reveal delay={0.1}>
+            <div className="flex h-full flex-col justify-center rounded-3xl border-2 border-brand-yellow bg-brand-yellow-soft p-8 glow-yellow">
+              <p className="text-sm font-medium text-brand-ink-soft">{t(calculator.resultLabel)}</p>
+              <p className="mt-2 text-5xl font-extrabold text-brand-ink md:text-6xl">
+                {fmt(fare)}{" "}
+                <span className="text-2xl">{lang === "ar" ? "ج.م" : "EGP"}</span>
+              </p>
+              <p className="mt-6 text-xs text-brand-ink-soft">{t(calculator.note)}</p>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
