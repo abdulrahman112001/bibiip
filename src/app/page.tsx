@@ -12,26 +12,29 @@ import Testimonials from "@/components/Testimonials";
 import Download from "@/components/Download";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import { getAllContent } from "@/lib/getContent";
 
-export default function Home() {
+export default async function Home() {
+  const content = await getAllContent();
+
   return (
     <>
-      <Header />
+      <Header brand={content.brand} navData={content.nav} />
       <main className="flex-1">
         <HeroReel />
-        <Hero />
-        <OurStory />
-        <Services />
-        <HowItWorks />
-        <Features />
-        <Calculator />
-        <Walkthrough />
-        <Plans />
-        <Testimonials />
-        <Download />
-        <FAQ />
+        <Hero data={content.hero} />
+        <OurStory data={content.ourStory} />
+        <Services data={content.services} />
+        <HowItWorks data={content.howItWorks} />
+        <Features data={content.features} />
+        <Calculator data={content.calculator} />
+        <Walkthrough data={content.walkthrough} />
+        <Plans data={content.plans} />
+        <Testimonials data={content.testimonials} />
+        <Download data={content.download} />
+        <FAQ data={content.faq} />
       </main>
-      <Footer />
+      <Footer brand={content.brand} data={content.footer} />
     </>
   );
 }

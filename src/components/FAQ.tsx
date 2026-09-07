@@ -5,19 +5,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
-import { faq } from "@/lib/content";
 
-export default function FAQ() {
+type Props = { data: typeof import("@/lib/content").faq };
+
+export default function FAQ({ data }: Props) {
   const { t } = useLang();
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section id="faq" className="relative border-t border-border bg-bg py-24 md:py-32">
       <div className="mx-auto max-w-3xl px-6">
-        <SectionHeading eyebrow={faq.eyebrow} title={faq.title} center />
+        <SectionHeading eyebrow={data.eyebrow} title={data.title} center />
 
         <div className="mt-12 divide-y divide-border border-y border-border">
-          {faq.items.map((item, i) => {
+          {data.items.map((item, i) => {
             const isOpen = open === i;
             return (
               <Reveal key={t(item.q)} delay={i * 0.05}>

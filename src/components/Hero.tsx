@@ -4,11 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import { useLang } from "@/lib/i18n";
-import { hero } from "@/lib/content";
 
 const mockupAlt = { en: "Beep Beep app", ar: "تطبيق بيب بيب" };
 
-export default function Hero() {
+type Props = { data: typeof import("@/lib/content").hero };
+
+export default function Hero({ data }: Props) {
   const { t } = useLang();
 
   return (
@@ -29,18 +30,18 @@ export default function Hero() {
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-ink px-4 py-1.5 text-xs font-bold tracking-wide text-brand-yellow">
               <span className="size-1.5 rounded-full bg-brand-yellow" />
-              {t(hero.eyebrow)}
+              {t(data.eyebrow)}
             </span>
           </Reveal>
 
           <Reveal delay={0.1}>
             <h1 className="mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight text-brand-ink md:text-6xl">
-              {t(hero.title)}
+              {t(data.title)}
             </h1>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="mt-6 max-w-lg text-lg text-text-muted">{t(hero.subtitle)}</p>
+            <p className="mt-6 max-w-lg text-lg text-text-muted">{t(data.subtitle)}</p>
           </Reveal>
 
           <Reveal delay={0.3}>
@@ -49,20 +50,20 @@ export default function Hero() {
                 href="#download"
                 className="rounded-full bg-brand-yellow px-7 py-3.5 text-base font-bold text-brand-ink transition-transform hover:scale-105 glow-yellow"
               >
-                {t(hero.ctaPrimary)}
+                {t(data.ctaPrimary)}
               </a>
               <a
                 href="#services"
                 className="rounded-full border-2 border-brand-ink/15 px-7 py-3.5 text-base font-bold text-brand-ink transition-colors hover:bg-brand-ink/5"
               >
-                {t(hero.ctaSecondary)}
+                {t(data.ctaSecondary)}
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={0.4}>
             <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
-              {hero.stats.map((s) => (
+              {data.stats.map((s) => (
                 <div key={s.value}>
                   <dt className="text-2xl font-extrabold text-brand-ink md:text-3xl">{s.value}</dt>
                   <dd className="mt-1 text-xs text-text-muted">{t(s.label)}</dd>
@@ -79,7 +80,7 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
           >
             <Image
-              src={hero.mockup}
+              src={data.mockup}
               alt={t(mockupAlt)}
               width={520}
               height={640}

@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// كل سكشن في الموقع (hero, services, ourStory...) بيتخزن كصف واحد هنا،
+/// والمحتوى نفسه (بما فيه كل نصوص {en, ar}) متخزن كـ JSON بنفس شكله
+/// بالظبط في src/lib/content.ts - عشان نقدر نعدّل أي سكشن من غير ما نضيف
+/// جدول/عمود جديد كل مرة.
+model ContentSection {
+  /// مفتاح السكشن، زي "hero" أو "services" - نفس اسم الـ export في content.ts
+  key       String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+/// الصور اللي بترفع من لوحة التحكم - متخزنة في قاعدة البيانات نفسها (مش في
+/// public/) عشان تشتغل صح سواء محليًا أو بعد النشر من غير أي خدمة تخزين
+/// خارجية إضافية. بتتعرض عن طريق /api/assets/[id].
+model Asset {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  data      Bytes
+  createdAt DateTime @default(now())
+}

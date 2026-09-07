@@ -4,16 +4,17 @@ import { useMemo, useState } from "react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
-import { calculator } from "@/lib/content";
 
-export default function Calculator() {
+type Props = { data: typeof import("@/lib/content").calculator };
+
+export default function Calculator({ data }: Props) {
   const { t, lang } = useLang();
 
-  const [serviceKey, setServiceKey] = useState(calculator.serviceOptions[0].key);
+  const [serviceKey, setServiceKey] = useState(data.serviceOptions[0].key);
   const [distance, setDistance] = useState(8);
   const [peak, setPeak] = useState(false);
 
-  const service = calculator.serviceOptions.find((s) => s.key === serviceKey)!;
+  const service = data.serviceOptions.find((s) => s.key === serviceKey)!;
 
   const fare = useMemo(() => {
     const raw = service.base + service.perKm * distance;
@@ -26,15 +27,15 @@ export default function Calculator() {
   return (
     <section id="calculator" className="relative border-t border-border bg-bg py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading eyebrow={calculator.eyebrow} title={calculator.title} body={calculator.body} />
+        <SectionHeading eyebrow={data.eyebrow} title={data.title} body={data.body} />
 
         <div className="mt-16 grid gap-6 lg:grid-cols-2">
           {/* المدخلات */}
           <Reveal>
             <div className="rounded-3xl border border-border bg-surface p-8">
-              <label className="text-sm font-medium text-text-muted">{t(calculator.serviceLabel)}</label>
+              <label className="text-sm font-medium text-text-muted">{t(data.serviceLabel)}</label>
               <div className="mt-3 flex flex-wrap gap-2">
-                {calculator.serviceOptions.map((opt) => (
+                {data.serviceOptions.map((opt) => (
                   <button
                     key={opt.key}
                     type="button"
@@ -53,7 +54,7 @@ export default function Calculator() {
 
               <div className="mt-8">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-text-muted">{t(calculator.inputs.distance)}</label>
+                  <label className="text-sm font-medium text-text-muted">{t(data.inputs.distance)}</label>
                   <span className="text-lg font-extrabold text-brand-ink">{fmt(distance)}</span>
                 </div>
                 <input
@@ -74,7 +75,7 @@ export default function Calculator() {
                   onChange={(e) => setPeak(e.target.checked)}
                   className="size-5 accent-brand-yellow-dark"
                 />
-                <span className="text-sm font-medium text-text">{t(calculator.peakLabel)}</span>
+                <span className="text-sm font-medium text-text">{t(data.peakLabel)}</span>
               </label>
             </div>
           </Reveal>
@@ -82,12 +83,12 @@ export default function Calculator() {
           {/* النتيجة */}
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col justify-center rounded-3xl border-2 border-brand-yellow bg-brand-yellow-soft p-8 glow-yellow">
-              <p className="text-sm font-medium text-brand-ink-soft">{t(calculator.resultLabel)}</p>
+              <p className="text-sm font-medium text-brand-ink-soft">{t(data.resultLabel)}</p>
               <p className="mt-2 text-5xl font-extrabold text-brand-ink md:text-6xl">
                 {fmt(fare)}{" "}
                 <span className="text-2xl">{lang === "ar" ? "ج.م" : "EGP"}</span>
               </p>
-              <p className="mt-6 text-xs text-brand-ink-soft">{t(calculator.note)}</p>
+              <p className="mt-6 text-xs text-brand-ink-soft">{t(data.note)}</p>
             </div>
           </Reveal>
         </div>

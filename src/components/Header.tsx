@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 import { useLang } from "@/lib/i18n";
-import { brand, nav } from "@/lib/content";
 
-export default function Header() {
+type Props = {
+  brand: typeof import("@/lib/content").brand;
+  navData: typeof import("@/lib/content").nav;
+};
+
+export default function Header({ brand, navData }: Props) {
   const { t, lang, toggle } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -54,7 +58,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
-          {nav.links.map((link) => (
+          {navData.links.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -79,7 +83,7 @@ export default function Header() {
             href="#contact"
             className="hidden rounded-full bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-ink transition-transform hover:scale-105 md:inline-block"
           >
-            {t(nav.cta)}
+            {t(navData.cta)}
           </a>
 
           <button
@@ -109,7 +113,7 @@ export default function Header() {
             className="absolute inset-x-0 top-full border-b border-border bg-bg/95 backdrop-blur-md lg:hidden"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
-              {nav.links.map((link) => (
+              {navData.links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
@@ -124,7 +128,7 @@ export default function Header() {
                 onClick={() => setOpen(false)}
                 className="mt-2 rounded-full bg-brand-yellow px-5 py-3 text-center text-base font-bold text-brand-ink"
               >
-                {t(nav.cta)}
+                {t(navData.cta)}
               </a>
             </div>
           </motion.nav>

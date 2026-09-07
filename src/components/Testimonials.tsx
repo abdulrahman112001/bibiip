@@ -3,17 +3,18 @@
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
-import { testimonials } from "@/lib/content";
 
-export default function Testimonials() {
+type Props = { data: typeof import("@/lib/content").testimonials };
+
+export default function Testimonials({ data }: Props) {
   const { t } = useLang();
   return (
     <section className="relative border-t border-border bg-bg-elev py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading eyebrow={testimonials.eyebrow} title={testimonials.title} center />
+        <SectionHeading eyebrow={data.eyebrow} title={data.title} center />
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {testimonials.items.map((item, i) => (
+          {data.items.map((item, i) => (
             <Reveal key={t(item.name)} delay={i * 0.1}>
               <figure className="flex h-full flex-col rounded-3xl border border-border bg-surface p-8">
                 <div className="text-brand-yellow" aria-hidden>

@@ -5,14 +5,15 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Reveal from "./Reveal";
 import { useLang } from "@/lib/i18n";
-import { ourStory } from "@/lib/content";
 
 /**
  * مستوحى من سكشن "We built our own road" في waabi.ai:
  * صور حقيقية متبعتره حوالين نص في النص، والنص بيتلوّن كلمة كلمة مع نزولك بالسكرول
  * — بس بهوية بيب بيب الفاتحة (أصفر/بني) بدل السواد.
  */
-export default function OurStory() {
+type Props = { data: typeof import("@/lib/content").ourStory };
+
+export default function OurStory({ data }: Props) {
   const { t } = useLang();
 
   return (
@@ -20,7 +21,7 @@ export default function OurStory() {
       <div className="relative mx-auto max-w-6xl px-6">
         {/* الصور المتبعترة - ديسكتوب بس */}
         <div className="pointer-events-none absolute inset-0 hidden md:block">
-          {ourStory.photos.map((photo, i) => (
+          {data.photos.map((photo, i) => (
             <motion.div
               key={photo.src}
               className="absolute overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5"
@@ -48,7 +49,7 @@ export default function OurStory() {
 
         {/* موبايل: صورتين بس في صف واحد فوق النص */}
         <div className="mb-10 grid grid-cols-2 gap-4 md:hidden">
-          {ourStory.photos.slice(0, 2).map((photo) => (
+          {data.photos.slice(0, 2).map((photo) => (
             <div key={photo.src} className="aspect-square overflow-hidden rounded-2xl shadow-lg">
               <Image
                 src={photo.src}
@@ -65,11 +66,11 @@ export default function OurStory() {
         <div className="relative z-10 mx-auto max-w-2xl py-4 text-center md:py-64">
           <Reveal>
             <span className="inline-block rounded-full bg-brand-ink px-4 py-1.5 text-xs font-bold tracking-wide text-brand-yellow">
-              {t(ourStory.eyebrow)}
+              {t(data.eyebrow)}
             </span>
           </Reveal>
 
-          <RevealText text={t(ourStory.manifesto)} />
+          <RevealText text={t(data.manifesto)} />
         </div>
       </div>
     </section>

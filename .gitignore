@@ -42,3 +42,9 @@ next-env.d.ts
 
 .vercel
 .env*
+
+/src/generated/prisma
+
+# قاعدة بيانات SQLite المحلية (للتطوير بس - الإنتاج هيستخدم Postgres)
+/dev.db
+/dev.db-journal

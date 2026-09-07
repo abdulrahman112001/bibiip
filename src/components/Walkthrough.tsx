@@ -6,22 +6,23 @@ import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
-import { walkthrough } from "@/lib/content";
 
-export default function Walkthrough() {
+type Props = { data: typeof import("@/lib/content").walkthrough };
+
+export default function Walkthrough({ data }: Props) {
   const { t } = useLang();
   const [active, setActive] = useState(0);
-  const tab = walkthrough.tabs[active];
+  const tab = data.tabs[active];
 
   return (
     <section id="walkthrough" className="relative border-t border-border bg-bg-elev py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading eyebrow={walkthrough.eyebrow} title={walkthrough.title} center />
+        <SectionHeading eyebrow={data.eyebrow} title={data.title} center />
 
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
             <div className="flex flex-col gap-3">
-              {walkthrough.tabs.map((tb, i) => (
+              {data.tabs.map((tb, i) => (
                 <Reveal key={tb.key} delay={i * 0.06}>
                   <button
                     type="button"

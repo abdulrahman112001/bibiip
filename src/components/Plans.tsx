@@ -3,17 +3,18 @@
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
-import { plans } from "@/lib/content";
 
-export default function Plans() {
+type Props = { data: typeof import("@/lib/content").plans };
+
+export default function Plans({ data }: Props) {
   const { t } = useLang();
   return (
     <section id="plans" className="relative border-t border-border bg-bg py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading eyebrow={plans.eyebrow} title={plans.title} body={plans.body} center />
+        <SectionHeading eyebrow={data.eyebrow} title={data.title} body={data.body} center />
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {plans.items.map((plan, i) => (
+          {data.items.map((plan, i) => (
             <Reveal key={t(plan.name)} delay={i * 0.1}>
               <div
                 className={
@@ -49,7 +50,7 @@ export default function Plans() {
                       "pb-1 text-sm " + (plan.highlighted ? "text-white/70" : "text-text-muted")
                     }
                   >
-                    {t(plans.currency)} {t(plans.perWeek)}
+                    {t(data.currency)} {t(data.perWeek)}
                   </span>
                 </div>
 
@@ -86,7 +87,7 @@ export default function Plans() {
                       : "border border-brand-ink/15 text-brand-ink hover:bg-brand-ink/5")
                   }
                 >
-                  {t(plans.eyebrow)}
+                  {t(data.eyebrow)}
                 </a>
               </div>
             </Reveal>
