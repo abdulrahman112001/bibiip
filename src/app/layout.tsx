@@ -12,6 +12,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.bibiip.online"),
   title: "بيب بيب | مشاوير، نقل، توصيل... كله بين ايديك",
   description:
     "بيب بيب - تطبيق التوصيل والنقل المصري. اطلب مشوارك، انقل شحنتك، وتابع طلبك لحظة بلحظة. مشاوير، نقل، توصيل، وسوبر ماركت في تطبيق واحد.",
