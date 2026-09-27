@@ -28,7 +28,7 @@ type Props = { data: typeof import("@/lib/content").hero };
  * بنفس تقدّم السكرول.
  */
 export default function Hero({ data }: Props) {
-  const { t } = useLang();
+  const { t, img } = useLang();
   const reduce = useReducedMotion();
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,7 @@ export default function Hero({ data }: Props) {
       >
         <div className="absolute inset-0 grid-bg opacity-30" aria-hidden />
         <AmbientDots theme="ink" />
-        <HeroContent data={data} t={t} />
+        <HeroContent data={data} t={t} img={img} />
       </section>
     );
   }
@@ -159,7 +159,7 @@ export default function Hero({ data }: Props) {
           style={{ opacity: fullHeroOpacity, y: fullHeroY }}
           className="relative mx-auto flex h-full max-w-7xl items-center px-6 pt-16"
         >
-          <HeroContent data={data} t={t} dark />
+          <HeroContent data={data} t={t} img={img} dark />
         </motion.div>
       </section>
     </div>
@@ -169,10 +169,12 @@ export default function Hero({ data }: Props) {
 function HeroContent({
   data,
   t,
+  img,
   dark,
 }: {
   data: Props["data"];
   t: (v: { en: string; ar: string }) => string;
+  img: (v: { en: string; ar: string }) => string;
   dark?: boolean;
 }) {
   return (
@@ -261,7 +263,7 @@ function HeroContent({
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
-                src={data.mockup}
+                src={img(data.mockup)}
                 alt={t(mockupAlt)}
                 width={520}
                 height={640}

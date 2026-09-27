@@ -10,7 +10,7 @@ import { useLang } from "@/lib/i18n";
 type Props = { data: typeof import("@/lib/content").download };
 
 export default function Download({ data }: Props) {
-  const { t } = useLang();
+  const { t, img } = useLang();
   return (
     <section id="download" className="relative overflow-hidden border-t border-border bg-brand-ink py-24 md:py-32">
       <AmbientDots theme="glow" />
@@ -46,7 +46,7 @@ export default function Download({ data }: Props) {
         <Reveal delay={0.15} variant="flip" className="flex justify-center">
           <Tilt3D max={10}>
             <Image
-              src={data.image}
+              src={img(data.image)}
               alt={t(data.title)}
               width={360}
               height={720}

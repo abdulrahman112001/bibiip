@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Reveal from "./Reveal";
 import LivingPhoto from "./LivingPhoto";
-import { useLang } from "@/lib/i18n";
+import { useLang, type L } from "@/lib/i18n";
 
 /** الصورة دي بالذات عندها فيديو حقيقي مطابق - بتتحول لـ"صورة حيّة" (شوف LivingPhoto) */
 const LIVING_PHOTOS: Record<string, string> = {
@@ -21,7 +21,7 @@ const LIVING_PHOTOS: Record<string, string> = {
 type Props = { data: typeof import("@/lib/content").ourStory };
 
 export default function OurStory({ data }: Props) {
-  const { t } = useLang();
+  const { t, img } = useLang();
   const sectionRef = useRef<HTMLElement>(null);
 
   // تقدّم السكرول من لحظة ما السكشن يدخل الشاشة لحد ما يخرج منها -
@@ -34,15 +34,15 @@ export default function OurStory({ data }: Props) {
         {/* الصور المتبعترة - ديسكتوب بس */}
         <div className="pointer-events-none absolute inset-0 hidden md:block">
           {data.photos.map((photo, i) => (
-            <FloatingPhoto key={photo.src} photo={photo} index={i} progress={scrollYProgress} />
+            <FloatingPhoto key={img(photo.src)} photo={photo} index={i} progress={scrollYProgress} />
           ))}
         </div>
 
         {/* موبايل: صورتين بس في صف واحد فوق النص */}
         <div className="mb-10 grid grid-cols-2 gap-4 md:hidden">
           {data.photos.slice(0, 2).map((photo) => (
-            <div key={photo.src} className="aspect-square overflow-hidden rounded-2xl shadow-lg">
-              <Image src={photo.src} alt="" width={400} height={400} className="h-full w-full object-cover" />
+            <div key={img(photo.src)} className="aspect-square overflow-hidden rounded-2xl shadow-lg">
+              <Image src={img(photo.src)} alt="" width={400} height={400} className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
@@ -62,7 +62,7 @@ export default function OurStory({ data }: Props) {
   );
 }
 
-type Photo = { src: string; left: string; top: string; size: number };
+type Photo = { src: L; left: string; top: string; size: number };
 
 /**
  * صورة عايمة: بتظهر مرة واحدة (fade-in) وتفضل ثابتة في مكانها - من غير
@@ -78,9 +78,11 @@ function FloatingPhoto({
   index: number;
   progress: MotionValue<number>;
 }) {
+  const { img } = useLang();
   const speed = 30 + (index % 3) * 22;
   const direction = index % 2 === 0 ? -1 : 1;
   const parallaxY = useTransform(progress, [0, 1], [speed * direction, -speed * direction]);
+  const src = img(photo.src);
 
   return (
     <motion.div
@@ -102,11 +104,11 @@ function FloatingPhoto({
             delay: index * 0.25,
           }}
         >
-          {LIVING_PHOTOS[photo.src] ? (
-            <LivingPhoto src={LIVING_PHOTOS[photo.src]} className="h-full w-full" />
+          {LIVING_PHOTOS[src] ? (
+            <LivingPhoto src={LIVING_PHOTOS[src]} className="h-full w-full" />
           ) : (
             <Image
-              src={photo.src}
+              src={src}
               alt=""
               width={photo.size * 2}
               height={photo.size * 2}

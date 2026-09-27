@@ -9,7 +9,7 @@ import { useLang } from "@/lib/i18n";
 type Props = { data: typeof import("@/lib/content").services };
 
 export default function Services({ data }: Props) {
-  const { t } = useLang();
+  const { t, img } = useLang();
   return (
     <section id="services" className="relative border-t border-border bg-bg py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
@@ -22,7 +22,7 @@ export default function Services({ data }: Props) {
                 <div className="group h-full overflow-hidden rounded-3xl border border-border bg-surface transition-all hover:shadow-xl glow-soft">
                   <div className="relative h-40 overflow-hidden">
                     <Image
-                      src={s.image}
+                      src={img(s.image)}
                       alt={t(s.title)}
                       fill
                       sizes="(max-width: 768px) 100vw, 320px"

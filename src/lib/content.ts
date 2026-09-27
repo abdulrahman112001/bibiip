@@ -6,6 +6,9 @@
 
 import type { L } from "./i18n";
 
+/** نفس مسار الصورة لعربي وإنجليزي كقيمة افتراضية - يتغير من لوحة التحكم لكل لغة لوحدها */
+const img = (path: string): L => ({ en: path, ar: path });
+
 export const brand = {
   name: { en: "Beep Beep", ar: "بيب بيب" } as L,
   tagline: {
@@ -38,7 +41,7 @@ export const hero = {
   } as L,
   ctaPrimary: { en: "Download the App", ar: "حمّل التطبيق" } as L,
   ctaSecondary: { en: "Explore Services", ar: "اعرف خدماتنا" } as L,
-  mockup: "/brand/hero-mockup.png",
+  mockup: { en: "/brand/hero-mockup.png", ar: "/brand/hero-mockup.png" } as L,
   stats: [
     { value: "+50", label: { en: "Coverage areas", ar: "منطقة تغطية" } as L },
     { value: "24/7", label: { en: "Live support", ar: "دعم على مدار الساعة" } as L },
@@ -53,15 +56,15 @@ export const ourStory = {
     ar: "بنينا بيب بيب عشان الشارع اللي انت عايش فيه فعلاً. كل مشوار، وكل طرد، وكل طلبية سوبر ماركت — بيوصلها ناس حقيقية، وانت شايف كل حاجة أول بأول، وعارف السعر قبل ما توافق.",
   } as L,
   photos: [
-    { src: "/brand/service-rides-hero.jpg", left: "6%", top: "4%", size: 150 },
-    { src: "/brand/service-transport-hero.jpg", left: "82%", top: "6%", size: 160 },
-    { src: "/brand/source-assets/rides-booking.jpg", left: "44%", top: "1%", size: 110 },
-    { src: "/brand/service-delivery-hero.jpg", left: "2%", top: "32%", size: 130 },
-    { src: "/brand/service-market-hero.jpg", left: "88%", top: "34%", size: 150 },
-    { src: "/brand/source-assets/transport-warehouse.jpg", left: "6%", top: "57%", size: 140 },
-    { src: "/brand/source-assets/rides-door.jpg", left: "88%", top: "60%", size: 130 },
-    { src: "/brand/source-assets/market-scooter.jpg", left: "4%", top: "80%", size: 120 },
-    { src: "/brand/source-assets/delivery-groceries-handoff.jpg", left: "86%", top: "82%", size: 140 },
+    { src: img("/brand/service-rides-hero.jpg"), left: "6%", top: "4%", size: 150 },
+    { src: img("/brand/service-transport-hero.jpg"), left: "82%", top: "6%", size: 160 },
+    { src: img("/brand/source-assets/rides-booking.jpg"), left: "44%", top: "1%", size: 110 },
+    { src: img("/brand/service-delivery-hero.jpg"), left: "2%", top: "32%", size: 130 },
+    { src: img("/brand/service-market-hero.jpg"), left: "88%", top: "34%", size: 150 },
+    { src: img("/brand/source-assets/transport-warehouse.jpg"), left: "6%", top: "57%", size: 140 },
+    { src: img("/brand/source-assets/rides-door.jpg"), left: "88%", top: "60%", size: 130 },
+    { src: img("/brand/source-assets/market-scooter.jpg"), left: "4%", top: "80%", size: 120 },
+    { src: img("/brand/source-assets/delivery-groceries-handoff.jpg"), left: "86%", top: "82%", size: 140 },
   ],
 };
 
@@ -83,7 +86,7 @@ export const services = {
         en: "Book a car in one tap, track your driver live, and travel at a clear price with no surprises.",
         ar: "اطلب عربيتك بنقرة واحدة، تابع مكان السائق لحظة بلحظة، وسافر بسعر واضح من غير مفاجآت.",
       } as L,
-      image: "/brand/service-rides-hero.jpg",
+      image: img("/brand/service-rides-hero.jpg"),
       icon: "🚗",
     },
     {
@@ -93,7 +96,7 @@ export const services = {
         en: "Moving heavy items? Choose a half-ton, quarter-ton or tuk-tuk and set your pickup and drop-off.",
         ar: "محتاج تنقل أغراض تقيلة؟ اختار نص نقل أو ربع نقل أو تروسيكل، وحدد مكان التحميل والتفريغ.",
       } as L,
-      image: "/brand/service-transport-hero.jpg",
+      image: img("/brand/service-transport-hero.jpg"),
       icon: "🚚",
     },
     {
@@ -103,7 +106,7 @@ export const services = {
         en: "Send a parcel to anyone in the city and follow its journey on the map until it arrives safely.",
         ar: "ابعت طرد لأي حد في المدينة وتابع رحلته على الخريطة أول بأول لحد ما يوصل بالسلامة.",
       } as L,
-      image: "/brand/service-delivery-hero.jpg",
+      image: img("/brand/service-delivery-hero.jpg"),
       icon: "📦",
     },
     {
@@ -113,7 +116,7 @@ export const services = {
         en: "Order from the nearest supermarket and get it delivered to your door without leaving home.",
         ar: "اطلب احتياجاتك من أقرب سوبر ماركت وهيوصلك للباب من غير ما تتحرك من مكانك.",
       } as L,
-      image: "/brand/service-market-hero.jpg",
+      image: img("/brand/service-market-hero.jpg"),
       icon: "🛒",
     },
   ],
@@ -237,7 +240,7 @@ export const walkthrough = {
     {
       key: "tracking",
       label: { en: "Parcel tracking", ar: "تتبع الطرد" } as L,
-      image: "/brand/service-tracking.png",
+      image: img("/brand/service-tracking.png"),
       desc: {
         en: "Follow your parcel step by step on the map until it arrives safely.",
         ar: "تابع رحلة طردك على الخريطة خطوة بخطوة لحد ما يوصل بالسلامة.",
@@ -246,7 +249,7 @@ export const walkthrough = {
     {
       key: "driver",
       label: { en: "Driver info", ar: "معلومات السائق" } as L,
-      image: "/brand/driver-info.png",
+      image: img("/brand/driver-info.png"),
       desc: {
         en: "Relax before the trip: driver name, rating and full car details.",
         ar: "اطمن قبل الرحلة: اسم السائق، تقييمه، وبيانات العربية كاملة.",
@@ -255,7 +258,7 @@ export const walkthrough = {
     {
       key: "chat",
       label: { en: "Contact", ar: "التواصل" } as L,
-      image: "/brand/service-chat.png",
+      image: img("/brand/service-chat.png"),
       desc: {
         en: "Chat with your driver or courier from inside the app, no number shared.",
         ar: "كلم السائق أو المندوب مباشرة من جوا التطبيق من غير ما تشارك رقمك.",
@@ -264,7 +267,7 @@ export const walkthrough = {
     {
       key: "rewards",
       label: { en: "Rewards & offers", ar: "المكافآت والعروض" } as L,
-      image: "/brand/rewards.png",
+      image: img("/brand/rewards.png"),
       desc: {
         en: "Earn points with every order and redeem them for exclusive discounts.",
         ar: "اجمع نقاط مع كل طلب واستخدمها في خصومات وعروض حصرية.",
@@ -363,7 +366,7 @@ export const download = {
     en: "Download Beep Beep and start ordering rides, freight, delivery and groceries in minutes.",
     ar: "حمّل بيب بيب وابدأ تطلب مشاوير ونقل وتوصيل وسوبر ماركت في دقايق.",
   } as L,
-  image: "/brand/onboarding-1.png",
+  image: img("/brand/onboarding-1.png"),
   appStore: { en: "Download on the App Store", ar: "حمّل من App Store" } as L,
   googlePlay: { en: "Get it on Google Play", ar: "حمّل من Google Play" } as L,
   soon: { en: "Coming soon", ar: "قريبًا" } as L,

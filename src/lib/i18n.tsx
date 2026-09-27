@@ -19,6 +19,8 @@ type LangContextValue = {
   toggle: () => void;
   /** يرجّع النص حسب اللغة الحالية من كائن { en, ar } */
   t: (value: L) => string;
+  /** زي t() بس للصور: لو اللغة الحالية معملهاش صورة، بيرجع صورة اللغة التانية بدل الفراغ */
+  img: (value: L) => string;
 };
 
 const LangContext = createContext<LangContextValue | null>(null);
@@ -55,10 +57,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((value: L) => value[lang], [lang]);
+  const img = useCallback((value: L) => value?.[lang] || value?.ar || value?.en || "", [lang]);
 
   return (
     <LangContext.Provider
-      value={{ lang, dir: lang === "ar" ? "rtl" : "ltr", setLang, toggle, t }}
+      value={{ lang, dir: lang === "ar" ? "rtl" : "ltr", setLang, toggle, t, img }}
     >
       {children}
     </LangContext.Provider>

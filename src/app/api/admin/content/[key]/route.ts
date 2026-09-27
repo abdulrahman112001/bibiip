@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/requireAdmin";
 import * as staticContent from "@/lib/content";
+import { contentSchemas } from "@/lib/contentSchemas";
+import { normalizeSection } from "@/lib/normalizeContent";
 
 type Params = { params: Promise<{ key: string }> };
 
@@ -18,9 +20,11 @@ export async function GET(_req: Request, { params }: Params) {
   }
 
   const row = await prisma.contentSection.findUnique({ where: { key } });
+  const raw = row ? (row.data as Record<string, unknown>) : staticContent[key as keyof typeof staticContent];
+  const schema = contentSchemas[key];
   return NextResponse.json({
     key,
-    data: row ? row.data : staticContent[key as keyof typeof staticContent],
+    data: schema ? normalizeSection(schema, raw as Record<string, unknown>) : raw,
     updatedAt: row?.updatedAt ?? null,
   });
 }

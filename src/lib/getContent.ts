@@ -1,6 +1,8 @@
 import "server-only";
 import { prisma } from "./prisma";
 import * as staticContent from "./content";
+import { contentSchemas } from "./contentSchemas";
+import { normalizeSection } from "./normalizeContent";
 
 type ContentKey = keyof typeof staticContent;
 
@@ -14,7 +16,11 @@ export async function getContent<K extends ContentKey>(
 ): Promise<(typeof staticContent)[K]> {
   try {
     const row = await prisma.contentSection.findUnique({ where: { key } });
-    if (row) return row.data as (typeof staticContent)[K];
+    if (row) {
+      const schema = contentSchemas[key as string];
+      const data = row.data as Record<string, unknown>;
+      return (schema ? normalizeSection(schema, data) : data) as (typeof staticContent)[K];
+    }
   } catch (err) {
     console.error(`[getContent] فشل الاتصال بقاعدة البيانات لسكشن "${key}":`, err);
   }

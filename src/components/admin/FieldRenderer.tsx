@@ -32,8 +32,9 @@ function defaultValueForField(field: Field): unknown {
     case "bilingual":
       return { en: "", ar: "" };
     case "text":
-    case "image":
       return "";
+    case "image":
+      return { en: "", ar: "" };
     case "number":
       return 0;
     case "boolean":
@@ -123,12 +124,26 @@ export default function FieldRenderer({ field, value, path, onChange }: Props) {
   }
 
   if (field.kind === "image") {
+    const v = (value as { en?: string; ar?: string } | undefined) ?? { en: "", ar: "" };
     return (
-      <ImageField
-        label={field.label}
-        value={(value as string) ?? ""}
-        onChange={(url) => onChange(path, url)}
-      />
+      <div>
+        <label className="mb-1.5 block text-sm font-bold text-slate-700">{field.label}</label>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <ImageField
+            label="عربي"
+            value={v.ar ?? ""}
+            onChange={(url) => onChange([...path, "ar"], url)}
+          />
+          <ImageField
+            label="English"
+            value={v.en ?? ""}
+            onChange={(url) => onChange([...path, "en"], url)}
+          />
+        </div>
+        <p className="mt-1 text-xs text-slate-400">
+          لو سبت لغة من غير صورة، الموقع هيستخدم صورة اللغة التانية بدالها.
+        </p>
+      </div>
     );
   }
 

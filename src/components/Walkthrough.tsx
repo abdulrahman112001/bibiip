@@ -11,7 +11,7 @@ import { useLang } from "@/lib/i18n";
 type Props = { data: typeof import("@/lib/content").walkthrough };
 
 export default function Walkthrough({ data }: Props) {
-  const { t } = useLang();
+  const { t, img } = useLang();
   const [active, setActive] = useState(0);
   const tab = data.tabs[active];
 
@@ -68,7 +68,7 @@ export default function Walkthrough({ data }: Props) {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                 >
                   <Image
-                    src={tab.image}
+                    src={img(tab.image)}
                     alt={t(tab.label)}
                     width={360}
                     height={720}
