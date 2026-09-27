@@ -4,46 +4,37 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Reveal from "./Reveal";
+import LivingPhoto from "./LivingPhoto";
 import { useLang } from "@/lib/i18n";
+
+/** الصورة دي بالذات عندها فيديو حقيقي مطابق - بتتحول لـ"صورة حيّة" (شوف LivingPhoto) */
+const LIVING_PHOTOS: Record<string, string> = {
+  "/brand/service-transport-hero.jpg": "/brand/transport-hologram.mp4",
+};
 
 /**
  * مستوحى من سكشن "We built our own road" في waabi.ai:
- * صور حقيقية متبعتره حوالين نص في النص، والنص بيتلوّن كلمة كلمة مع نزولك بالسكرول
- * — بس بهوية بيب بيب الفاتحة (أصفر/بني) بدل السواد.
+ * صور حقيقية متبعتره حوالين نص في النص، والنص بيتلوّن كلمة كلمة مع نزولك
+ * بالسكرول. كل صورة بتظهر مرة واحدة وتفضل ثابتة في مكانها (من غير اختفاء
+ * وظهور) - بس بتتحرك بهدوء (parallax + عوم بسيط) عشان تحس إن السكشن عايش.
  */
 type Props = { data: typeof import("@/lib/content").ourStory };
 
 export default function OurStory({ data }: Props) {
   const { t } = useLang();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // تقدّم السكرول من لحظة ما السكشن يدخل الشاشة لحد ما يخرج منها -
+  // بنستخدمه عشان كل صورة تتحرك بسرعة مختلفة (عمق حقيقي/parallax)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
 
   return (
-    <section className="relative overflow-hidden bg-bg py-24 md:py-32">
+    <section ref={sectionRef} className="relative overflow-hidden bg-bg py-24 md:py-32">
       <div className="relative mx-auto max-w-6xl px-6">
         {/* الصور المتبعترة - ديسكتوب بس */}
         <div className="pointer-events-none absolute inset-0 hidden md:block">
           {data.photos.map((photo, i) => (
-            <motion.div
-              key={photo.src}
-              className="absolute overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5"
-              style={{
-                left: photo.left,
-                top: photo.top,
-                width: photo.size,
-                height: photo.size,
-              }}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3, margin: "-10% 0px -10% 0px" }}
-              transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: i * 0.06 }}
-            >
-              <Image
-                src={photo.src}
-                alt=""
-                width={photo.size * 2}
-                height={photo.size * 2}
-                className="h-full w-full object-cover"
-              />
-            </motion.div>
+            <FloatingPhoto key={photo.src} photo={photo} index={i} progress={scrollYProgress} />
           ))}
         </div>
 
@@ -51,13 +42,7 @@ export default function OurStory({ data }: Props) {
         <div className="mb-10 grid grid-cols-2 gap-4 md:hidden">
           {data.photos.slice(0, 2).map((photo) => (
             <div key={photo.src} className="aspect-square overflow-hidden rounded-2xl shadow-lg">
-              <Image
-                src={photo.src}
-                alt=""
-                width={400}
-                height={400}
-                className="h-full w-full object-cover"
-              />
+              <Image src={photo.src} alt="" width={400} height={400} className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
@@ -74,6 +59,63 @@ export default function OurStory({ data }: Props) {
         </div>
       </div>
     </section>
+  );
+}
+
+type Photo = { src: string; left: string; top: string; size: number };
+
+/**
+ * صورة عايمة: بتظهر مرة واحدة (fade-in) وتفضل ثابتة في مكانها - من غير
+ * اختفاء تاني - بس بحركتين خفيفتين مستمرتين فوقها: parallax حسب سكرول
+ * الصفحة (كل صورة بسرعة مختلفة، فيحس إنهم في عمق مختلف)، وعوم بطيء دايم.
+ */
+function FloatingPhoto({
+  photo,
+  index,
+  progress,
+}: {
+  photo: Photo;
+  index: number;
+  progress: MotionValue<number>;
+}) {
+  const speed = 30 + (index % 3) * 22;
+  const direction = index % 2 === 0 ? -1 : 1;
+  const parallaxY = useTransform(progress, [0, 1], [speed * direction, -speed * direction]);
+
+  return (
+    <motion.div
+      className="absolute overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5"
+      style={{ left: photo.left, top: photo.top, width: photo.size, height: photo.size }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3, margin: "-10% 0px -10% 0px" }}
+      transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: index * 0.06 }}
+    >
+      <motion.div className="h-full w-full" style={{ y: parallaxY }}>
+        <motion.div
+          className="h-full w-full"
+          animate={{ y: [0, -9, 0] }}
+          transition={{
+            duration: 4.5 + (index % 3),
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: index * 0.25,
+          }}
+        >
+          {LIVING_PHOTOS[photo.src] ? (
+            <LivingPhoto src={LIVING_PHOTOS[photo.src]} className="h-full w-full" />
+          ) : (
+            <Image
+              src={photo.src}
+              alt=""
+              width={photo.size * 2}
+              height={photo.size * 2}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 

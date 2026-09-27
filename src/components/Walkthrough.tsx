@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
 
@@ -57,23 +58,25 @@ export default function Walkthrough({ data }: Props) {
           </div>
 
           <div className="order-1 flex justify-center lg:order-2">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={tab.key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-              >
-                <Image
-                  src={tab.image}
-                  alt={t(tab.label)}
-                  width={360}
-                  height={720}
-                  className="w-[240px] drop-shadow-2xl md:w-[300px]"
-                />
-              </motion.div>
-            </AnimatePresence>
+            <Tilt3D max={10}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={tab.key}
+                  initial={{ opacity: 0, y: 20, rotateX: 20 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                >
+                  <Image
+                    src={tab.image}
+                    alt={t(tab.label)}
+                    width={360}
+                    height={720}
+                    className="w-60 drop-shadow-2xl md:w-75"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </Tilt3D>
           </div>
         </div>
       </div>

@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
+import Magnetic from "./Magnetic";
+import AmbientDots from "./AmbientDots";
 import { useLang } from "@/lib/i18n";
 
 type Props = { data: typeof import("@/lib/content").download };
@@ -10,6 +13,7 @@ export default function Download({ data }: Props) {
   const { t } = useLang();
   return (
     <section id="download" className="relative overflow-hidden border-t border-border bg-brand-ink py-24 md:py-32">
+      <AmbientDots theme="glow" />
       <div
         className="absolute inset-0"
         aria-hidden
@@ -39,14 +43,16 @@ export default function Download({ data }: Props) {
           </Reveal>
         </div>
 
-        <Reveal delay={0.15} className="flex justify-center">
-          <Image
-            src={data.image}
-            alt={t(data.title)}
-            width={360}
-            height={720}
-            className="w-[240px] drop-shadow-2xl md:w-[300px]"
-          />
+        <Reveal delay={0.15} variant="flip" className="flex justify-center">
+          <Tilt3D max={10}>
+            <Image
+              src={data.image}
+              alt={t(data.title)}
+              width={360}
+              height={720}
+              className="w-60 drop-shadow-2xl md:w-75"
+            />
+          </Tilt3D>
         </Reveal>
       </div>
     </section>
@@ -55,9 +61,11 @@ export default function Download({ data }: Props) {
 
 function StoreButton({ title, soon }: { title: string; soon: string }) {
   return (
-    <span className="flex items-center gap-3 rounded-2xl bg-brand-yellow px-6 py-3.5 font-bold text-brand-ink">
-      {title}
-      <span className="rounded-full bg-brand-ink/10 px-2 py-0.5 text-[10px] font-bold">{soon}</span>
-    </span>
+    <Magnetic strength={0.3}>
+      <span className="flex items-center gap-3 rounded-2xl bg-brand-yellow px-6 py-3.5 font-bold text-brand-ink">
+        {title}
+        <span className="rounded-full bg-brand-ink/10 px-2 py-0.5 text-[10px] font-bold">{soon}</span>
+      </span>
+    </Magnetic>
   );
 }

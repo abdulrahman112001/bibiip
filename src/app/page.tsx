@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import HeroReel from "@/components/HeroReel";
 import Hero from "@/components/Hero";
 import OurStory from "@/components/OurStory";
 import Services from "@/components/Services";
@@ -12,6 +11,9 @@ import Testimonials from "@/components/Testimonials";
 import Download from "@/components/Download";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import CursorGlow from "@/components/CursorGlow";
+import DeliveryJourney from "@/components/DeliveryJourney";
+import SoundToggle from "@/components/SoundToggle";
 import { getAllContent } from "@/lib/getContent";
 
 export default async function Home() {
@@ -19,9 +21,11 @@ export default async function Home() {
 
   return (
     <>
+      <CursorGlow />
+      <DeliveryJourney data={content} />
+      <SoundToggle />
       <Header brand={content.brand} navData={content.nav} />
       <main className="flex-1">
-        <HeroReel />
         <Hero data={content.hero} />
         <OurStory data={content.ourStory} />
         <Services data={content.services} />

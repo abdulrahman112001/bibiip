@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import { LanguageProvider } from "@/lib/i18n";
+import { SoundProvider } from "@/lib/sound";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -21,8 +22,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ar" dir="rtl" className={`${cairo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-bg text-text font-sans">
         <LanguageProvider>
-          <SmoothScroll />
-          {children}
+          <SoundProvider>
+            <SmoothScroll />
+            {children}
+          </SoundProvider>
         </LanguageProvider>
       </body>
     </html>

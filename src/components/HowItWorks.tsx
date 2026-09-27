@@ -1,6 +1,7 @@
 "use client";
 
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
 
@@ -24,14 +25,16 @@ export default function HowItWorks({ data }: Props) {
             />
             <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {data.steps.map((step, i) => (
-                <Reveal key={step.no} delay={i * 0.1}>
-                  <li className="relative">
-                    <div className="flex size-16 items-center justify-center rounded-2xl border border-border bg-surface text-xl font-extrabold text-brand-yellow-dark">
-                      {step.no}
-                    </div>
-                    <h3 className="mt-5 text-base font-bold text-brand-ink">{t(step.title)}</h3>
-                    <p className="mt-2 text-sm text-text-muted">{t(step.desc)}</p>
-                  </li>
+                <Reveal key={step.no} delay={i * 0.1} variant="flip">
+                  <Tilt3D max={6}>
+                    <li className="relative">
+                      <div className="flex size-16 items-center justify-center rounded-2xl border border-border bg-surface text-xl font-extrabold text-brand-yellow-dark">
+                        {step.no}
+                      </div>
+                      <h3 className="mt-5 text-base font-bold text-brand-ink">{t(step.title)}</h3>
+                      <p className="mt-2 text-sm text-text-muted">{t(step.desc)}</p>
+                    </li>
+                  </Tilt3D>
                 </Reveal>
               ))}
             </ol>

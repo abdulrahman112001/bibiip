@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
+import Magnetic from "./Magnetic";
 import { useLang } from "@/lib/i18n";
 
 type Props = {
@@ -18,10 +19,30 @@ export default function Header({ brand, navData }: Props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    // الهيرو (لو سينماتيك) عنده مساحة سكرول طويلة بيتثبّت فيها الفيديو -
+    // مش عايزين خلفية الناف تظهر فوقه لحد ما نخلّص السكشن ده فعليًا وننتقل
+    // للي بعده، عشان الفيديو يفضل واضح كامل من غير أي تظليل فوقه.
+    let threshold = 24;
+
+    const computeThreshold = () => {
+      const hero = document.getElementById("hero-cinematic");
+      threshold = hero ? hero.offsetHeight - 4 : 24;
+    };
+
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    const onResize = () => {
+      computeThreshold();
+      onScroll();
+    };
+
+    computeThreshold();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -79,12 +100,16 @@ export default function Header({ brand, navData }: Props) {
             {lang === "en" ? "العربية" : "EN"}
           </button>
 
-          <a
-            href="#contact"
-            className="hidden rounded-full bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-ink transition-transform hover:scale-105 md:inline-block"
-          >
-            {t(navData.cta)}
-          </a>
+          <div className="hidden md:block">
+            <Magnetic>
+              <a
+                href="#contact"
+                className="inline-block rounded-full bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-ink transition-transform hover:scale-105"
+              >
+                {t(navData.cta)}
+              </a>
+            </Magnetic>
+          </div>
 
           <button
             type="button"

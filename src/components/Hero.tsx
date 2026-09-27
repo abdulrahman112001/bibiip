@@ -1,128 +1,277 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
+import Magnetic from "./Magnetic";
+import AmbientDots from "./AmbientDots";
 import { useLang } from "@/lib/i18n";
 
 const mockupAlt = { en: "Beep Beep app", ar: "تطبيق بيب بيب" };
 
 type Props = { data: typeof import("@/lib/content").hero };
 
+/**
+ * الهيرو بقى "لحظة سينماتيك" واحدة متثبتة (pinned) بدل سكشنين منفصلين
+ * (فيديو + نص). طول ما المستخدم بيعمل سكرول جوا المساحة دي، الفيديو
+ * بيتقطّع (scrub) بالظبط زي ScrollTransportScene، والمحتوى بيتحول من
+ * "لقطة عنوان" كبيرة لنص/موبايل/أزرار الهيرو التقليدي - كل حاجة مربوطة
+ * بنفس تقدّم السكرول.
+ */
 export default function Hero({ data }: Props) {
   const { t } = useLang();
+  const reduce = useReducedMotion();
+
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const durationRef = useRef(0);
+  const targetTimeRef = useRef(0);
+  const seekingRef = useRef(false);
+
+  const { scrollYProgress: rawProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start start", "end end"],
+  });
+  // بنلفّ التقدّم الخام بزنبرك ناعم - بدل ما الفيديو "يقفز" مع كل حركة عجلة
+  // ماوس صغيرة، بيتحرك بسلاسة زي ما لو كان بيتشغل فعلًا مش بيتقطّع
+  const progress = useSpring(rawProgress, { stiffness: 90, damping: 24, mass: 0.4 });
+
+  // لقطة العنوان الكبيرة (Beat A): ظاهرة في الأول وبتختفي وهي بتكبر شوية للخلف
+  const titleCardOpacity = useTransform(progress, [0, 0.32, 0.48], [1, 1, 0]);
+  const titleCardY = useTransform(progress, [0, 0.5], [0, -50]);
+  const titleCardScale = useTransform(progress, [0, 0.5], [1, 1.06]);
+
+  // الهيرو الكامل (Beat B): بيدخل بعد ما لقطة العنوان تخلص وبيستقر لحد آخر السكرول
+  const fullHeroOpacity = useTransform(progress, [0.4, 0.62], [0, 1]);
+  const fullHeroY = useTransform(progress, [0.4, 0.68], [48, 0]);
+
+  // تظليل الفيديو بيزيد تدريجيًا عشان النص يفضل واضح كل ما دخلنا في Beat B
+  const overlayOpacity = useTransform(progress, [0, 0.4, 1], [0.1, 0.15, 0.55]);
+
+  // تقطيع الفيديو (scrub) حسب تقدّم السكرول - نفس منطق ScrollTransportScene
+  // بالظبط (بما فيه حل مشكلة تراكم طلبات الـ seek فوق بعض).
+  useEffect(() => {
+    if (reduce) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    const applyTarget = () => {
+      if (seekingRef.current) return;
+      const diff = Math.abs(video.currentTime - targetTimeRef.current);
+      if (diff < 0.03) return;
+      seekingRef.current = true;
+      video.currentTime = targetTimeRef.current;
+    };
+
+    const onLoaded = () => {
+      durationRef.current = video.duration || 0;
+      applyTarget();
+    };
+    const onSeeked = () => {
+      seekingRef.current = false;
+      applyTarget();
+    };
+
+    video.addEventListener("loadedmetadata", onLoaded);
+    video.addEventListener("seeked", onSeeked);
+    video.pause();
+    if (video.readyState >= 1 && video.duration) durationRef.current = video.duration;
+
+    return () => {
+      video.removeEventListener("loadedmetadata", onLoaded);
+      video.removeEventListener("seeked", onSeeked);
+    };
+  }, [reduce]);
+
+  useMotionValueEvent(progress, "change", (v) => {
+    if (reduce) return;
+    const video = videoRef.current;
+    const duration = durationRef.current;
+    if (!video || !duration) return;
+    const clamped = Math.min(0.98, Math.max(0.01, v));
+    targetTimeRef.current = clamped * duration;
+    if (!seekingRef.current) {
+      const diff = Math.abs(video.currentTime - targetTimeRef.current);
+      if (diff >= 0.03) {
+        seekingRef.current = true;
+        video.currentTime = targetTimeRef.current;
+      }
+    }
+  });
+
+  // نسخة بسيطة وثابتة لمن يفضّل تقليل الحركة - نفس الهيرو التقليدي من غير تثبيت/سكرب
+  if (reduce) {
+    return (
+      <section
+        id="hero-cinematic"
+        className="relative overflow-hidden bg-linear-to-b from-brand-yellow-soft to-bg pt-28 pb-20 md:pt-32"
+      >
+        <div className="absolute inset-0 grid-bg opacity-30" aria-hidden />
+        <AmbientDots theme="ink" />
+        <HeroContent data={data} t={t} />
+      </section>
+    );
+  }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-brand-yellow-soft to-bg pt-28 pb-20 md:pt-32">
-      <div className="absolute inset-0 grid-bg opacity-30" aria-hidden />
-      <div
-        className="absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(50% 40% at 80% 15%, rgba(255,196,19,0.35), transparent 70%)",
-        }}
-      />
-      <RouteVisual />
+    <div id="hero-cinematic" ref={wrapRef} className="relative" style={{ height: "320vh" }}>
+      <section className="sticky top-0 h-screen w-full overflow-hidden bg-brand-yellow-soft">
+        <video
+          ref={videoRef}
+          src="/brand/action-reel.mp4"
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <motion.div
+          className="pointer-events-none absolute inset-0 bg-brand-ink"
+          style={{ opacity: overlayOpacity }}
+          aria-hidden
+        />
+        <AmbientDots theme="glow" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2">
-        <div>
+        {/* Beat A: لقطة عنوان سينماتيك كبيرة */}
+        <motion.div
+          style={{ opacity: titleCardOpacity, y: titleCardY, scale: titleCardScale }}
+          className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full bg-brand-ink/80 px-4 py-1.5 text-xs font-bold tracking-wide text-brand-yellow backdrop-blur">
+            <span className="size-1.5 rounded-full bg-brand-yellow" />
+            {t(data.eyebrow)}
+          </span>
+          <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-[1.1] tracking-tight text-white md:text-7xl">
+            {t(data.title)}
+          </h1>
+        </motion.div>
+
+        {/* Beat B: الهيرو المستقر بالنص والموبايل والأزرار */}
+        <motion.div
+          style={{ opacity: fullHeroOpacity, y: fullHeroY }}
+          className="relative mx-auto flex h-full max-w-7xl items-center px-6 pt-16"
+        >
+          <HeroContent data={data} t={t} dark />
+        </motion.div>
+      </section>
+    </div>
+  );
+}
+
+function HeroContent({
+  data,
+  t,
+  dark,
+}: {
+  data: Props["data"];
+  t: (v: { en: string; ar: string }) => string;
+  dark?: boolean;
+}) {
+  return (
+    <div className="relative grid w-full items-center gap-12 lg:grid-cols-2">
+      <div>
+        {!dark && (
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-ink px-4 py-1.5 text-xs font-bold tracking-wide text-brand-yellow">
               <span className="size-1.5 rounded-full bg-brand-yellow" />
               {t(data.eyebrow)}
             </span>
           </Reveal>
+        )}
 
-          <Reveal delay={0.1}>
-            <h1 className="mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight text-brand-ink md:text-6xl">
-              {t(data.title)}
-            </h1>
-          </Reveal>
+        <Reveal delay={0.1} variant="flip">
+          <h1
+            className={
+              "mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight md:text-6xl " +
+              (dark ? "text-white" : "text-brand-ink")
+            }
+          >
+            {t(data.title)}
+          </h1>
+        </Reveal>
 
-          <Reveal delay={0.2}>
-            <p className="mt-6 max-w-lg text-lg text-text-muted">{t(data.subtitle)}</p>
-          </Reveal>
+        <Reveal delay={0.2}>
+          <p className={"mt-6 max-w-lg text-lg " + (dark ? "text-white/75" : "text-text-muted")}>
+            {t(data.subtitle)}
+          </p>
+        </Reveal>
 
-          <Reveal delay={0.3}>
-            <div className="mt-8 flex flex-wrap gap-4">
+        <Reveal delay={0.3}>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Magnetic>
               <a
                 href="#download"
-                className="rounded-full bg-brand-yellow px-7 py-3.5 text-base font-bold text-brand-ink transition-transform hover:scale-105 glow-yellow"
+                className="inline-block rounded-full bg-brand-yellow px-7 py-3.5 text-base font-bold text-brand-ink transition-transform hover:scale-105 glow-yellow"
               >
                 {t(data.ctaPrimary)}
               </a>
+            </Magnetic>
+            <Magnetic>
               <a
                 href="#services"
-                className="rounded-full border-2 border-brand-ink/15 px-7 py-3.5 text-base font-bold text-brand-ink transition-colors hover:bg-brand-ink/5"
+                className={
+                  "inline-block rounded-full border-2 px-7 py-3.5 text-base font-bold transition-colors " +
+                  (dark
+                    ? "border-white/25 text-white hover:bg-white/10"
+                    : "border-brand-ink/15 text-brand-ink hover:bg-brand-ink/5")
+                }
               >
                 {t(data.ctaSecondary)}
               </a>
-            </div>
-          </Reveal>
+            </Magnetic>
+          </div>
+        </Reveal>
 
-          <Reveal delay={0.4}>
-            <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
-              {data.stats.map((s) => (
-                <div key={s.value}>
-                  <dt className="text-2xl font-extrabold text-brand-ink md:text-3xl">{s.value}</dt>
-                  <dd className="mt-1 text-xs text-text-muted">{t(s.label)}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
+        <Reveal delay={0.4}>
+          <dl
+            className={
+              "mt-12 grid max-w-md grid-cols-3 gap-6 border-t pt-8 " +
+              (dark ? "border-white/15" : "border-border")
+            }
+          >
+            {data.stats.map((s) => (
+              <div key={s.value}>
+                <dt className={"text-2xl font-extrabold md:text-3xl " + (dark ? "text-white" : "text-brand-ink")}>
+                  {s.value}
+                </dt>
+                <dd className={"mt-1 text-xs " + (dark ? "text-white/60" : "text-text-muted")}>{t(s.label)}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+      </div>
 
-        <Reveal delay={0.2} className="flex justify-center">
+      <Reveal delay={0.2} className="flex justify-center">
+        <Tilt3D max={12} scale={1.04}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
           >
-            <Image
-              src={data.mockup}
-              alt={t(mockupAlt)}
-              width={520}
-              height={640}
-              priority
-              className="w-[260px] drop-shadow-2xl md:w-[360px]"
-            />
+            <motion.div
+              animate={{ y: [0, -14, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src={data.mockup}
+                alt={t(mockupAlt)}
+                width={520}
+                height={640}
+                priority
+                className="w-65 drop-shadow-2xl md:w-90"
+              />
+            </motion.div>
           </motion.div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/** مسار توصيل متحرك بلون بيب بيب */
-function RouteVisual() {
-  const d = "M-50 640 C 250 640, 320 440, 580 440 S 920 300, 1250 300";
-  return (
-    <svg
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
-      viewBox="0 0 1200 800"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="route" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ffc413" />
-          <stop offset="100%" stopColor="#e2a300" />
-        </linearGradient>
-      </defs>
-      <motion.path
-        d={d}
-        fill="none"
-        stroke="url(#route)"
-        strokeWidth="3"
-        strokeDasharray="10 14"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ duration: 2.2, ease: "easeInOut" }}
-      />
-      <circle r="7" fill="#ffc413" style={{ filter: "drop-shadow(0 0 8px #ffc413)" }}>
-        <animateMotion dur="6s" repeatCount="indefinite" path={d} />
-      </circle>
-    </svg>
+        </Tilt3D>
+      </Reveal>
+    </div>
   );
 }

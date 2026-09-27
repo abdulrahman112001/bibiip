@@ -135,7 +135,7 @@ export default function FieldRenderer({ field, value, path, onChange }: Props) {
   if (field.kind === "object") {
     const v = (value as Record<string, unknown>) ?? {};
     return (
-      <fieldset className="rounded-xl border border-border p-4">
+      <fieldset className="rounded-2xl border border-border bg-bg-elev/40 p-4 shadow-sm">
         <legend className="px-1 text-sm font-bold text-slate-700">{field.label}</legend>
         <div className="space-y-4">
           {Object.entries(field.fields).map(([key, f]) => (
@@ -174,7 +174,7 @@ export default function FieldRenderer({ field, value, path, onChange }: Props) {
       <label className="mb-2 block text-sm font-bold text-slate-700">{field.label}</label>
       <div className="space-y-3">
         {items.map((item, i) => (
-          <div key={i} className="rounded-xl border border-border bg-surface/60 p-4">
+          <div key={i} className="rounded-2xl border border-border bg-bg-elev/50 p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs font-bold text-slate-400">
                 {itemDisplayTitle(itemSchema, item, i)}

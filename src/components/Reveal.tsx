@@ -10,6 +10,12 @@ type RevealProps = {
   className?: string;
   /** يخليها تختفي تاني لو رجعت السكرول لفوق، زي reveal-y في الموقع الأصلي */
   repeat?: boolean;
+  /**
+   * "up" (افتراضي): فيد-إن + حركة لأعلى بسيطة.
+   * "flip": دخول 3D حقيقي — بيميل لفوق من الأسفل (perspective) + بلور بيتصفّى +
+   * تكبير خفيف، إحساس أعمق (5D) للعناصر الكبيرة زي العناوين والكروت.
+   */
+  variant?: "up" | "flip";
 };
 
 /**
@@ -22,6 +28,7 @@ export default function Reveal({
   y = 28,
   className,
   repeat = true,
+  variant = "up",
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, {
@@ -30,18 +37,31 @@ export default function Reveal({
     once: !repeat,
   });
 
-  const variants: Variants = {
-    hidden: { opacity: 0, y },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.9,
-        ease: [0.19, 1, 0.22, 1],
-        delay,
-      },
-    },
-  };
+  const variants: Variants =
+    variant === "flip"
+      ? {
+          hidden: { opacity: 0, y: y + 20, rotateX: 55, scale: 0.92, filter: "blur(8px)" },
+          visible: {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            transition: { duration: 1, ease: [0.19, 1, 0.22, 1], delay },
+          },
+        }
+      : {
+          hidden: { opacity: 0, y },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+              duration: 0.9,
+              ease: [0.19, 1, 0.22, 1],
+              delay,
+            },
+          },
+        };
 
   return (
     <motion.div
@@ -49,6 +69,7 @@ export default function Reveal({
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       variants={variants}
+      style={variant === "flip" ? { transformPerspective: 1200, transformOrigin: "bottom" } : undefined}
       className={className}
     >
       {children}

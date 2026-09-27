@@ -20,7 +20,7 @@ export default function SectionHeading({
       <Reveal>
         <span className="text-xs font-bold tracking-widest text-brand-yellow-dark">{t(eyebrow)}</span>
       </Reveal>
-      <Reveal delay={0.05}>
+      <Reveal delay={0.05} variant="flip">
         <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-brand-ink md:text-4xl lg:text-5xl">
           {t(title)}
         </h2>

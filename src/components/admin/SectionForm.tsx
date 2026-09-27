@@ -99,9 +99,14 @@ export default function SectionForm({
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {Object.entries(schema).map(([key, field]) => (
-          <FieldRenderer key={key} field={field} value={data[key]} path={[key]} onChange={handleChange} />
+          <div
+            key={key}
+            className="rounded-2xl border border-border bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <FieldRenderer field={field} value={data[key]} path={[key]} onChange={handleChange} />
+          </div>
         ))}
       </div>
     </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
+import Magnetic from "./Magnetic";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
 
@@ -15,17 +17,18 @@ export default function Plans({ data }: Props) {
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {data.items.map((plan, i) => (
-            <Reveal key={t(plan.name)} delay={i * 0.1}>
-              <div
-                className={
-                  "relative flex h-full flex-col rounded-3xl border p-8 " +
-                  (plan.highlighted
-                    ? "border-brand-yellow bg-brand-ink text-white glow-yellow"
-                    : "border-border bg-surface")
-                }
-              >
+            <Reveal key={t(plan.name)} delay={i * 0.1} variant="flip">
+              <Tilt3D className="h-full" max={7}>
+                <div
+                  className={
+                    "relative flex h-full flex-col rounded-3xl border p-8 " +
+                    (plan.highlighted
+                      ? "border-brand-yellow bg-brand-ink text-white glow-yellow"
+                      : "border-border bg-surface")
+                  }
+                >
                 {plan.highlighted && (
-                  <span className="absolute -top-3 start-8 rounded-full bg-brand-yellow px-3 py-1 text-xs font-bold text-brand-ink">
+                  <span className="absolute -top-3 inset-s-8 rounded-full bg-brand-yellow px-3 py-1 text-xs font-bold text-brand-ink">
                     ★
                   </span>
                 )}
@@ -78,18 +81,21 @@ export default function Plans({ data }: Props) {
                   ))}
                 </ul>
 
-                <a
-                  href="#download"
-                  className={
-                    "mt-8 rounded-full px-6 py-3 text-center text-sm font-bold transition-transform hover:scale-[1.02] " +
-                    (plan.highlighted
-                      ? "bg-brand-yellow text-brand-ink"
-                      : "border border-brand-ink/15 text-brand-ink hover:bg-brand-ink/5")
-                  }
-                >
-                  {t(data.eyebrow)}
-                </a>
-              </div>
+                <Magnetic strength={0.25} className="mt-8 w-full">
+                  <a
+                    href="#download"
+                    className={
+                      "block w-full rounded-full px-6 py-3 text-center text-sm font-bold transition-transform hover:scale-[1.02] " +
+                      (plan.highlighted
+                        ? "bg-brand-yellow text-brand-ink"
+                        : "border border-brand-ink/15 text-brand-ink hover:bg-brand-ink/5")
+                    }
+                  >
+                    {t(data.eyebrow)}
+                  </a>
+                </Magnetic>
+                </div>
+              </Tilt3D>
             </Reveal>
           ))}
         </div>

@@ -1,9 +1,6 @@
 import { auth, signOut } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import Sidebar from "@/components/admin/Sidebar";
-import AdminHeaderClient from "@/components/admin/AdminHeaderClient";
-
-const HEADER_HEIGHT = 72;
+import AdminShell from "@/components/admin/AdminShell";
 
 export default async function AdminDashboardLayout({
   children,
@@ -19,19 +16,8 @@ export default async function AdminDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header
-        className="fixed inset-x-0 top-0 z-20 border-b border-border bg-white"
-        style={{ height: HEADER_HEIGHT }}
-      >
-        <AdminHeaderClient email={session.user?.email} onLogout={logoutAction} />
-      </header>
-
-      {/* الهيدر fixed فبياخد نفسه بره الـ flow - محتاجين مسافة فاضية بارتفاعه فوق الباقي */}
-      <div style={{ paddingTop: HEADER_HEIGHT }}>
-        <Sidebar topOffset={HEADER_HEIGHT} />
-        <main className="min-w-0 ms-64 px-6 py-10 md:px-10">{children}</main>
-      </div>
-    </div>
+    <AdminShell email={session.user?.email} onLogout={logoutAction}>
+      {children}
+    </AdminShell>
   );
 }

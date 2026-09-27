@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 /**
@@ -8,7 +9,12 @@ import Lenis from "lenis";
  * بنفس الفكرة اللي شغالة في terminal-industries.com (مكتبة lenis).
  */
 export default function SmoothScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
+    // لوحة الأدمن بتستخدم تمرير داخلي (main + السايدبار) فـ Lenis بيعطّله
+    if (pathname?.startsWith("/admin")) return;
+
     const lenis = new Lenis({
       duration: 1.1,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -26,7 +32,7 @@ export default function SmoothScroll() {
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

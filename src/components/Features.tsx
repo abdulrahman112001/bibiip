@@ -1,6 +1,7 @@
 "use client";
 
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
 
@@ -15,14 +16,16 @@ export default function Features({ data }: Props) {
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {data.items.map((f, i) => (
-            <Reveal key={t(f.title)} delay={i * 0.08}>
-              <div className="h-full rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-brand-yellow">
-                <div className="flex size-11 items-center justify-center rounded-xl bg-brand-yellow-soft text-brand-yellow-dark">
-                  <span className="size-2.5 rounded-full bg-brand-yellow-dark" />
+            <Reveal key={t(f.title)} delay={i * 0.08} variant="flip">
+              <Tilt3D className="h-full">
+                <div className="h-full rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-brand-yellow">
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-brand-yellow-soft text-brand-yellow-dark">
+                    <span className="size-2.5 rounded-full bg-brand-yellow-dark" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-bold text-brand-ink">{t(f.title)}</h3>
+                  <p className="mt-2 text-sm text-text-muted">{t(f.desc)}</p>
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-brand-ink">{t(f.title)}</h3>
-                <p className="mt-2 text-sm text-text-muted">{t(f.desc)}</p>
-              </div>
+              </Tilt3D>
             </Reveal>
           ))}
         </div>

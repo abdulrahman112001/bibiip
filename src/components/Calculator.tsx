@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import Tilt3D from "./Tilt3D";
 import SectionHeading from "./SectionHeading";
 import { useLang } from "@/lib/i18n";
 
@@ -81,15 +83,22 @@ export default function Calculator({ data }: Props) {
           </Reveal>
 
           {/* النتيجة */}
-          <Reveal delay={0.1}>
-            <div className="flex h-full flex-col justify-center rounded-3xl border-2 border-brand-yellow bg-brand-yellow-soft p-8 glow-yellow">
-              <p className="text-sm font-medium text-brand-ink-soft">{t(data.resultLabel)}</p>
-              <p className="mt-2 text-5xl font-extrabold text-brand-ink md:text-6xl">
-                {fmt(fare)}{" "}
-                <span className="text-2xl">{lang === "ar" ? "ج.م" : "EGP"}</span>
-              </p>
-              <p className="mt-6 text-xs text-brand-ink-soft">{t(data.note)}</p>
-            </div>
+          <Reveal delay={0.1} variant="flip">
+            <Tilt3D max={6} scale={1.015}>
+              <div className="flex h-full flex-col justify-center rounded-3xl border-2 border-brand-yellow bg-brand-yellow-soft p-8 glow-yellow">
+                <p className="text-sm font-medium text-brand-ink-soft">{t(data.resultLabel)}</p>
+                <motion.p
+                  key={fare}
+                  initial={{ opacity: 0.4, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                  className="mt-2 text-5xl font-extrabold text-brand-ink md:text-6xl"
+                >
+                  {fmt(fare)} <span className="text-2xl">{lang === "ar" ? "ج.م" : "EGP"}</span>
+                </motion.p>
+                <p className="mt-6 text-xs text-brand-ink-soft">{t(data.note)}</p>
+              </div>
+            </Tilt3D>
           </Reveal>
         </div>
       </div>
