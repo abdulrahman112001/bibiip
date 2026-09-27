@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useLang, type L } from "@/lib/i18n";
 import { sectionLabels } from "@/lib/contentSchemas";
 
@@ -11,11 +11,19 @@ const pageSubtitle = {
   en: "Welcome back — an overview of your Beep Beep site content.",
   ar: "مرحبًا بك مرة أخرى — نظرة عامة على محتوى موقع بيب بيب.",
 };
-const allSectionsLabel = { en: "All sections", ar: "كل السكاشن" };
-const thisMonthLabel = { en: "This month", ar: "هذا الشهر" };
+const statusAllLabel = { en: "All sections", ar: "كل السكاشن" };
+const statusEditedLabel = { en: "Edited only", ar: "المعدّلة بس" };
+const statusPendingLabel = { en: "Not edited", ar: "غير المعدّلة" };
+const periodAllLabel = { en: "All time", ar: "كل الوقت" };
+const periodMonthLabel = { en: "This month", ar: "هذا الشهر" };
+const periodQuarterLabel = { en: "Last 3 months", ar: "آخر 3 شهور" };
+const noMatchLabel = { en: "No sections match these filters", ar: "مفيش سكاشن مطابقة للفلتر ده" };
 const sectionsHeading = { en: "Quick access to sections", ar: "الوصول السريع للسكاشن" };
 const updatedPrefix = { en: "Last updated:", ar: "آخر تعديل:" };
 const neverEdited = { en: "Not edited yet", ar: "لسه من غير تعديل" };
+
+type StatusFilter = "all" | "edited" | "pending";
+type PeriodFilter = "all" | "month" | "quarter";
 
 const statTotal = { en: "Total sections", ar: "إجمالي السكاشن" };
 const statEdited = { en: "Edited sections", ar: "سكاشن معدّلة" };
@@ -198,6 +206,57 @@ const icon = (path: ReactNode) => (
   </svg>
 );
 
+function FilterDropdown<Value extends string>({
+  icon: triggerIcon,
+  value,
+  options,
+  onChange,
+}: {
+  icon: ReactNode;
+  value: Value;
+  options: { value: Value; label: string }[];
+  onChange: (v: Value) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = options.find((o) => o.value === value) ?? options[0];
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex h-11 items-center gap-2 rounded-2xl border border-border bg-white px-4 text-sm text-slate-500 transition-colors hover:border-brand-yellow hover:text-brand-ink"
+      >
+        {triggerIcon}
+        {current.label}
+      </button>
+      {open && (
+        <>
+          <button className="fixed inset-0 z-10 cursor-default" aria-hidden onClick={() => setOpen(false)} />
+          <div className="absolute inset-s-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-xl border border-border bg-white py-1 shadow-lg">
+            {options.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => {
+                  onChange(o.value);
+                  setOpen(false);
+                }}
+                className={
+                  "block w-full px-4 py-2 text-start text-sm hover:bg-surface " +
+                  (o.value === value ? "font-bold text-brand-ink" : "text-slate-500")
+                }
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function AdminHomeContent({
   sections,
   assetsCount,
@@ -210,6 +269,8 @@ export default function AdminHomeContent({
   const { t, lang } = useLang();
   const router = useRouter();
   const locale = lang === "ar" ? "ar-EG" : "en-US";
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
 
   const stats = useMemo(() => {
     const total = sections.length;
@@ -243,6 +304,23 @@ export default function AdminHomeContent({
     return { total, edited, pending, editedPct, lastEditText, months };
   }, [sections, t, locale, now]);
 
+  const filteredSections = useMemo(() => {
+    const current = new Date(now);
+    return sections.filter((s) => {
+      if (statusFilter === "edited" && !s.updatedAt) return false;
+      if (statusFilter === "pending" && s.updatedAt) return false;
+      if (periodFilter !== "all") {
+        if (!s.updatedAt) return false;
+        const d = new Date(s.updatedAt);
+        const monthsDiff =
+          (current.getFullYear() - d.getFullYear()) * 12 + (current.getMonth() - d.getMonth());
+        if (periodFilter === "month" && monthsDiff !== 0) return false;
+        if (periodFilter === "quarter" && (monthsDiff < 0 || monthsDiff > 2)) return false;
+      }
+      return true;
+    });
+  }, [sections, statusFilter, periodFilter, now]);
+
   return (
     <div className="space-y-4">
       {/* العنوان + الفلاتر */}
@@ -252,14 +330,26 @@ export default function AdminHomeContent({
           <p className="mt-1 text-sm text-slate-400">{t(pageSubtitle)}</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="flex h-11 items-center gap-2 rounded-2xl border border-border bg-white px-4 text-sm text-slate-500">
-            {icon(<><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>)}
-            {t(allSectionsLabel)}
-          </span>
-          <span className="flex h-11 items-center gap-2 rounded-2xl border border-border bg-white px-4 text-sm text-slate-500">
-            {icon(<><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></>)}
-            {t(thisMonthLabel)}
-          </span>
+          <FilterDropdown
+            value={statusFilter}
+            onChange={setStatusFilter}
+            icon={icon(<><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>)}
+            options={[
+              { value: "all", label: t(statusAllLabel) },
+              { value: "edited", label: t(statusEditedLabel) },
+              { value: "pending", label: t(statusPendingLabel) },
+            ]}
+          />
+          <FilterDropdown
+            value={periodFilter}
+            onChange={setPeriodFilter}
+            icon={icon(<><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></>)}
+            options={[
+              { value: "all", label: t(periodAllLabel) },
+              { value: "month", label: t(periodMonthLabel) },
+              { value: "quarter", label: t(periodQuarterLabel) },
+            ]}
+          />
           <button
             type="button"
             onClick={() => router.refresh()}
@@ -347,25 +437,32 @@ export default function AdminHomeContent({
 
       {/* الوصول السريع للسكاشن */}
       <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="font-bold text-brand-ink">{t(sectionsHeading)}</h2>
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sections.map(({ key, updatedAt }) => (
-            <Link
-              key={key}
-              href={`/admin/content/${key}`}
-              className="rounded-2xl border border-border bg-bg-elev/50 p-4 transition-shadow hover:shadow-md"
-            >
-              <h3 className="font-bold text-brand-ink">
-                {t((sectionLabels[key] as L) ?? { en: key, ar: key })}
-              </h3>
-              <p className="mt-1 text-xs text-slate-400">
-                {updatedAt
-                  ? `${t(updatedPrefix)} ${new Date(updatedAt).toLocaleString(locale)}`
-                  : t(neverEdited)}
-              </p>
-            </Link>
-          ))}
-        </div>
+        <h2 className="font-bold text-brand-ink">
+          {t(sectionsHeading)}{" "}
+          <span className="font-normal text-slate-400">({filteredSections.length})</span>
+        </h2>
+        {filteredSections.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-400">{t(noMatchLabel)}</p>
+        ) : (
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredSections.map(({ key, updatedAt }) => (
+              <Link
+                key={key}
+                href={`/admin/content/${key}`}
+                className="rounded-2xl border border-border bg-bg-elev/50 p-4 transition-shadow hover:shadow-md"
+              >
+                <h3 className="font-bold text-brand-ink">
+                  {t((sectionLabels[key] as L) ?? { en: key, ar: key })}
+                </h3>
+                <p className="mt-1 text-xs text-slate-400">
+                  {updatedAt
+                    ? `${t(updatedPrefix)} ${new Date(updatedAt).toLocaleString(locale)}`
+                    : t(neverEdited)}
+                </p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

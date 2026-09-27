@@ -1,11 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { useLang } from "@/lib/i18n";
+import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useLang, type L } from "@/lib/i18n";
+import { sectionLabels } from "@/lib/contentSchemas";
 
 const searchPlaceholder = { en: "Search the dashboard", ar: "ابحث في لوحة التحكم" };
 const roleLabel = { en: "Super Admin", ar: "أدمن عام" };
 const logoutLabel = { en: "Log out", ar: "تسجيل خروج" };
+const noResultsLabel = { en: "No matches", ar: "مفيش نتايج" };
+const overviewLabel = { en: "Overview", ar: "نظرة عامة" };
+const settingsSearchLabel = { en: "Settings", ar: "الإعدادات" };
+
+type SearchItem = { key: string; href: string; label: L };
+
+const searchIndex: SearchItem[] = [
+  { key: "__overview", href: "/admin", label: overviewLabel },
+  ...Object.entries(sectionLabels).map(([key, label]) => ({
+    key,
+    href: `/admin/content/${key}`,
+    label,
+  })),
+  { key: "__settings", href: "/admin/settings", label: settingsSearchLabel },
+];
 
 function initialsFromEmail(email?: string | null) {
   if (!email) return "A";
@@ -23,16 +41,45 @@ export default function AdminHeaderClient({
   onLogout: () => Promise<void>;
 }) {
   const { t, lang, setLang } = useLang();
+  const router = useRouter();
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const displayName = email?.split("@")[0] ?? "Admin";
+
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return searchIndex
+      .filter(
+        (item) =>
+          item.label.ar.toLowerCase().includes(q) ||
+          item.label.en.toLowerCase().includes(q) ||
+          item.key.toLowerCase().includes(q)
+      )
+      .slice(0, 8);
+  }, [query]);
+
+  function goTo(href: string) {
+    router.push(href);
+    setSearchOpen(false);
+    setQuery("");
+    inputRef.current?.blur();
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (results[0]) goTo(results[0].href);
+  }
 
   return (
     <header className="flex h-20 items-center gap-3 rounded-3xl border border-border bg-white px-4 md:gap-4 md:px-6">
       {/* البحث */}
       <div className="hidden flex-1 sm:block">
-        <div className="relative">
+        <form onSubmit={handleSubmit} className="relative">
           <span className="pointer-events-none absolute inset-y-0 inset-s-3 flex items-center text-slate-400">
             <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="7" />
@@ -40,11 +87,64 @@ export default function AdminHeaderClient({
             </svg>
           </span>
           <input
+            ref={inputRef}
             type="search"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSearchOpen(true);
+            }}
+            onFocus={() => setSearchOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setSearchOpen(false);
+                inputRef.current?.blur();
+              }
+            }}
             placeholder={t(searchPlaceholder)}
-            className="h-12 w-full rounded-2xl border border-border bg-bg-elev/60 ps-10 pe-4 text-sm text-brand-ink outline-none transition-colors placeholder:text-slate-400 focus:border-brand-yellow focus:bg-white"
+            className="h-12 w-full rounded-2xl border border-border bg-bg-elev/60 ps-10 pe-10 text-sm text-brand-ink outline-none transition-colors placeholder:text-slate-400 focus:border-brand-yellow focus:bg-white"
           />
-        </div>
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                inputRef.current?.focus();
+              }}
+              aria-label="Clear"
+              className="absolute inset-y-0 inset-e-3 flex items-center text-slate-400 hover:text-brand-ink"
+            >
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="m18 6-12 12M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+
+          {searchOpen && query && (
+            <>
+              <button className="fixed inset-0 z-10 cursor-default" aria-hidden onClick={() => setSearchOpen(false)} />
+              <div className="absolute inset-s-0 top-full z-20 mt-2 w-full max-w-sm overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-lg">
+                {results.length === 0 ? (
+                  <p className="px-4 py-3 text-sm text-slate-400">{t(noResultsLabel)}</p>
+                ) : (
+                  results.map((item) => (
+                    <Link
+                      key={item.key}
+                      href={item.href}
+                      onClick={() => {
+                        setSearchOpen(false);
+                        setQuery("");
+                      }}
+                      className="block px-4 py-2 text-start text-sm text-brand-ink hover:bg-surface"
+                    >
+                      {t(item.label)}
+                    </Link>
+                  ))
+                )}
+              </div>
+            </>
+          )}
+        </form>
       </div>
 
       {/* أدوات الجانب */}
