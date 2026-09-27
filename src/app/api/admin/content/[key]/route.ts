@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/requireAdmin";
 import * as staticContent from "@/lib/content";
 
 type Params = { params: Promise<{ key: string }> };
 
 /** بيرجّع القيمة الحالية للسكشن من قاعدة البيانات (أو النسخة الثابتة لو لسه مخزّنش) */
 export async function GET(_req: Request, { params }: Params) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   const { key } = await params;
 
   if (!(key in staticContent)) {
@@ -23,6 +27,9 @@ export async function GET(_req: Request, { params }: Params) {
 
 /** بيحفظ نسخة جديدة من محتوى السكشن (upsert) */
 export async function PUT(req: Request, { params }: Params) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   const { key } = await params;
 
   if (!(key in staticContent)) {

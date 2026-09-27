@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 /** رفع صورة جديدة - بترجع الرابط اللي تتحط في أي حقل صورة */
 export async function POST(req: Request) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   const form = await req.formData();
   const file = form.get("file");
 

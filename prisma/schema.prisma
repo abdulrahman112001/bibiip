@@ -33,3 +33,14 @@ model Asset {
   data      Bytes
   createdAt DateTime @default(now())
 }
+
+/// بيانات دخول الأدمن - صف واحد بس (id ثابت "admin"، أدمن واحد بالظبط زي
+/// ما هو الحال دايمًا). لو الصف ده لسه مش موجود (نشرة قديمة قبل ما نضيف
+/// الجدول ده)، الكود بيرجع تلقائيًا لمتغيرات البيئة ADMIN_EMAIL/
+/// ADMIN_PASSWORD_HASH كـ fallback - شوف getAdminCredentials في src/lib/auth.ts.
+model AdminUser {
+  id           String   @id
+  email        String
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}

@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/requireAdmin";
 import * as staticContent from "@/lib/content";
 
 /** قايمة كل السكاشن + آخر تحديث (لصفحة الداشبورد الرئيسية) */
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   const keys = Object.keys(staticContent) as (keyof typeof staticContent)[];
   const rows = await prisma.contentSection.findMany({
     where: { key: { in: keys } },
