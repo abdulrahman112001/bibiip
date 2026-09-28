@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { useLang, type L } from "@/lib/i18n";
 import { sectionLabels } from "@/lib/contentSchemas";
+import type { SearchConsoleSummary } from "@/lib/googleSearchConsole";
 
 const pageTitle = { en: "Dashboard", ar: "لوحة التحكم" };
 const pageSubtitle = {
@@ -33,6 +34,26 @@ const statLast = { en: "Last edit", ar: "آخر تعديل" };
 const ofTotal = { en: "of total", ar: "من الإجمالي" };
 const today = { en: "Today", ar: "اليوم" };
 const daysAgo = (n: number) => ({ en: `${n} days ago`, ar: `منذ ${n} يوم` });
+
+const searchConsoleTitle = {
+  en: "Search performance (last 28 days)",
+  ar: "أداء الموقع في نتائج بحث جوجل (آخر 28 يوم)",
+};
+const scClicksTrend = { en: "Clicks per week", ar: "الضغطات أسبوعيًا" };
+const scClicks = { en: "Clicks", ar: "الضغطات" };
+const scImpressions = { en: "Impressions", ar: "مرات الظهور" };
+const scCtr = { en: "CTR", ar: "نسبة النقر" };
+const scPosition = { en: "Avg. position", ar: "متوسط الترتيب" };
+const scTopQueries = { en: "Top search queries", ar: "أكتر كلمات بحث" };
+const scNoQueries = { en: "No search queries yet", ar: "لسه مفيش كلمات بحث" };
+const scNotConfigured = {
+  en: "Google Search Console isn't connected yet.",
+  ar: "لسه مفيش ربط مع Google Search Console.",
+};
+const scError = {
+  en: "Couldn't load Search Console data right now.",
+  ar: "معرفناش نجيب بيانات Search Console دلوقتي.",
+};
 
 const trendTitle = { en: "Edits over time", ar: "التعديلات خلال الفترة" };
 const donutTitle = { en: "Sections status", ar: "حالة السكاشن" };
@@ -261,10 +282,12 @@ export default function AdminHomeContent({
   sections,
   assetsCount,
   now,
+  searchConsole,
 }: {
   sections: SectionInfo[];
   assetsCount: number;
   now: number;
+  searchConsole: SearchConsoleSummary;
 }) {
   const { t, lang } = useLang();
   const router = useRouter();
@@ -303,6 +326,30 @@ export default function AdminHomeContent({
 
     return { total, edited, pending, editedPct, lastEditText, months };
   }, [sections, t, locale, now]);
+
+  // تجميع بيانات الضغطات اليومية من Search Console في 4 أسابيع - عشان نرسمها
+  // بنفس شكل رسم "التعديلات خلال الفترة" (نقط قليلة وواضحة بدل 28 يوم مزدحمة)
+  const scWeekly = useMemo(() => {
+    if (!searchConsole.ok) return [];
+    const byDate = new Map(searchConsole.daily.map((d) => [d.date, d.clicks]));
+    const end = new Date(now);
+    end.setDate(end.getDate() - 1);
+    const days: number[] = [];
+    for (let i = 27; i >= 0; i--) {
+      const d = new Date(end);
+      d.setDate(d.getDate() - i);
+      days.push(byDate.get(d.toISOString().slice(0, 10)) ?? 0);
+    }
+    const weeks: { label: string; clicks: number }[] = [];
+    for (let w = 0; w < 4; w++) {
+      const slice = days.slice(w * 7, w * 7 + 7);
+      const clicks = slice.reduce((sum, v) => sum + v, 0);
+      const weekStart = new Date(end);
+      weekStart.setDate(weekStart.getDate() - (27 - w * 7));
+      weeks.push({ label: weekStart.toLocaleDateString(locale, { day: "numeric", month: "short" }), clicks });
+    }
+    return weeks;
+  }, [searchConsole, now, locale]);
 
   const filteredSections = useMemo(() => {
     const current = new Date(now);
@@ -433,6 +480,81 @@ export default function AdminHomeContent({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* أداء البحث - Google Search Console */}
+      <div className="rounded-2xl border border-border bg-white p-5">
+        <h2 className="font-bold text-brand-ink">{t(searchConsoleTitle)}</h2>
+        {!searchConsole.ok ? (
+          <p className="mt-4 text-sm text-slate-400">
+            {searchConsole.reason === "not_configured" ? t(scNotConfigured) : t(scError)}
+          </p>
+        ) : (
+          <>
+            <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <StatCard
+                label={t(scClicks)}
+                value={searchConsole.totals.clicks.toLocaleString(locale)}
+                icon={icon(<><path d="m9 9 6 6M9 15l6-6" /><circle cx="12" cy="12" r="9" /></>)}
+                iconClass="bg-emerald-100 text-emerald-700"
+              />
+              <StatCard
+                label={t(scImpressions)}
+                value={searchConsole.totals.impressions.toLocaleString(locale)}
+                icon={icon(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></>)}
+                iconClass="bg-amber-100 text-amber-700"
+              />
+              <StatCard
+                label={t(scCtr)}
+                value={`${(searchConsole.totals.ctr * 100).toFixed(1)}%`}
+                icon={icon(<><path d="m12 3 1.9 4.1L18 9l-4.1 1.9L12 15l-1.9-4.1L6 9l4.1-1.9Z" /></>)}
+                iconClass="bg-yellow-100 text-yellow-700"
+              />
+              <StatCard
+                label={t(scPosition)}
+                value={searchConsole.totals.position.toFixed(1)}
+                icon={icon(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>)}
+                iconClass="bg-brand-yellow-soft text-brand-ink"
+              />
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
+              <div className="rounded-2xl border border-border bg-bg-elev/40 p-4">
+                <h3 className="text-sm font-bold text-brand-ink">{t(scClicksTrend)}</h3>
+                <div className="mt-2">
+                  <AreaChart
+                    values={scWeekly.map((w) => w.clicks)}
+                    labels={scWeekly.map((w) => w.label)}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-bg-elev/40 p-4">
+                <h3 className="text-sm font-bold text-brand-ink">{t(scTopQueries)}</h3>
+                <p className="mt-0.5 text-xs text-slate-400">
+                  {t(scClicks)} / {t(scImpressions)}
+                </p>
+                {searchConsole.topQueries.length === 0 ? (
+                  <p className="mt-3 text-sm text-slate-400">{t(scNoQueries)}</p>
+                ) : (
+                  <div className="mt-3 space-y-2">
+                    {searchConsole.topQueries.map((q) => (
+                      <div
+                        key={q.query}
+                        className="flex items-center justify-between gap-2 rounded-xl bg-surface px-3 py-2 text-sm"
+                      >
+                        <span className="truncate text-brand-ink">{q.query}</span>
+                        <span className="shrink-0 text-xs font-bold text-slate-500">
+                          {q.clicks.toLocaleString(locale)} / {q.impressions.toLocaleString(locale)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* الوصول السريع للسكاشن */}
