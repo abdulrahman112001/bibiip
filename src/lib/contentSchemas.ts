@@ -6,9 +6,11 @@
 
 import type { L as Bilingual } from "./i18n";
 
+export type HelpLink = { label: string; url: string };
+
 export type Field =
   | { kind: "bilingual"; label: string; multiline?: boolean }
-  | { kind: "text"; label: string }
+  | { kind: "text"; label: string; helpLink?: HelpLink }
   | { kind: "number"; label: string }
   | { kind: "boolean"; label: string }
   | { kind: "image"; label: string }
@@ -23,7 +25,7 @@ export type ArrayItemSchema =
 export type FieldMap = Record<string, Field>;
 
 const L = (label: string, multiline = false): Field => ({ kind: "bilingual", label, multiline });
-const T = (label: string): Field => ({ kind: "text", label });
+const T = (label: string, helpLink?: HelpLink): Field => ({ kind: "text", label, helpLink });
 const N = (label: string): Field => ({ kind: "number", label });
 const B = (label: string): Field => ({ kind: "boolean", label });
 const IMG = (label: string): Field => ({ kind: "image", label });
@@ -262,9 +264,10 @@ export const contentSchemas: Record<string, FieldMap> = {
     canonicalUrl: T("الرابط الأساسي للموقع (Canonical URL)"),
     twitterHandle: T("حساب X / تويتر (اختياري، مثال: @beepbeep)"),
     noIndex: B("إخفاء الموقع من نتائج البحث (Noindex) - استخدمها وقت التطوير بس"),
-    googleSiteVerification: T(
-      "كود تأكيد ملكية الموقع من Google Search Console (HTML tag method - الكود بس من غير الـ meta tag)"
-    ),
+    googleSiteVerification: T("كود تاكيد ملكية الموقع Google Search Console", {
+      label: "افتح لوحة Google Search Console",
+      url: "https://search.google.com/search-console",
+    }),
     contactEmail: T("إيميل التواصل (يظهر في نتائج البحث وبيانات الشركة)"),
     contactPhone: T("رقم الهاتف/واتساب للتواصل (اختياري)"),
     social: {
