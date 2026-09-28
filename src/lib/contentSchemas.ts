@@ -252,6 +252,17 @@ export const contentSchemas: Record<string, FieldMap> = {
     },
     rights: L("نص حقوق النشر"),
   },
+
+  seo: {
+    metaTitle: L("عنوان الصفحة (Title Tag)"),
+    metaDescription: L("وصف الصفحة (Meta Description)", true),
+    keywords: L("الكلمات المفتاحية (افصل بينهم بفاصلة)", true),
+    siteName: L("اسم الموقع (Site Name)"),
+    ogImage: IMG("صورة المشاركة (Open Graph / Twitter Card)"),
+    canonicalUrl: T("الرابط الأساسي للموقع (Canonical URL)"),
+    twitterHandle: T("حساب X / تويتر (اختياري، مثال: @beepbeep)"),
+    noIndex: B("إخفاء الموقع من نتائج البحث (Noindex) - استخدمها وقت التطوير بس"),
+  },
 };
 
 export const sectionLabels: Record<string, Bilingual> = {
@@ -269,4 +280,5 @@ export const sectionLabels: Record<string, Bilingual> = {
   download: { en: "Download CTA", ar: "حمّل التطبيق" },
   faq: { en: "FAQ", ar: "الأسئلة الشائعة" },
   footer: { en: "Footer", ar: "الفوتر" },
+  seo: { en: "SEO", ar: "تحسين محركات البحث (SEO)" },
 };

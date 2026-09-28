@@ -439,3 +439,23 @@ export const footer = {
   ],
   rights: { en: "All rights reserved.", ar: "كل الحقوق محفوظة." } as L,
 };
+
+export const seo = {
+  metaTitle: {
+    en: "Beep Beep | Rides, Freight, Delivery — all in your hand.",
+    ar: "بيب بيب | مشاوير، نقل، توصيل... كله بين ايديك",
+  } as L,
+  metaDescription: {
+    en: "Beep Beep is Egypt's all-in-one delivery and transport app. Book rides, move freight, send parcels and shop groceries — with clear prices and live tracking.",
+    ar: "بيب بيب - تطبيق التوصيل والنقل المصري. اطلب مشوارك، انقل شحنتك، وتابع طلبك لحظة بلحظة. مشاوير، نقل، توصيل، وسوبر ماركت في تطبيق واحد.",
+  } as L,
+  keywords: {
+    en: "ride hailing app Egypt, delivery app Egypt, freight transport app, parcel delivery, grocery delivery, Beep Beep app",
+    ar: "تطبيق مشاوير مصر, تطبيق توصيل مصر, تطبيق نقل بضائع, توصيل طرود, توصيل سوبر ماركت, تطبيق بيب بيب",
+  } as L,
+  siteName: { en: "Beep Beep", ar: "بيب بيب" } as L,
+  ogImage: img("/brand/logo.png"),
+  canonicalUrl: "https://www.bibiip.online",
+  twitterHandle: "",
+  noIndex: false,
+};
