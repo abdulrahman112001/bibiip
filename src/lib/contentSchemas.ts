@@ -262,6 +262,9 @@ export const contentSchemas: Record<string, FieldMap> = {
     canonicalUrl: T("الرابط الأساسي للموقع (Canonical URL)"),
     twitterHandle: T("حساب X / تويتر (اختياري، مثال: @beepbeep)"),
     noIndex: B("إخفاء الموقع من نتائج البحث (Noindex) - استخدمها وقت التطوير بس"),
+    googleSiteVerification: T(
+      "كود تأكيد ملكية الموقع من Google Search Console (HTML tag method - الكود بس من غير الـ meta tag)"
+    ),
     contactEmail: T("إيميل التواصل (يظهر في نتائج البحث وبيانات الشركة)"),
     contactPhone: T("رقم الهاتف/واتساب للتواصل (اختياري)"),
     social: {

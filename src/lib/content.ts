@@ -458,6 +458,7 @@ export const seo = {
   canonicalUrl: "https://www.bibiip.online",
   twitterHandle: "",
   noIndex: false,
+  googleSiteVerification: "",
   contactEmail: "",
   contactPhone: "",
   social: {

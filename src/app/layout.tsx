@@ -30,6 +30,9 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: seo.siteName.ar,
     robots: seo.noIndex ? { index: false, follow: false } : { index: true, follow: true },
     alternates: { canonical },
+    verification: seo.googleSiteVerification
+      ? { google: seo.googleSiteVerification }
+      : undefined,
     openGraph: {
       type: "website",
       url: canonical,
