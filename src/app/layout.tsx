@@ -53,6 +53,21 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const { seo, brand } = await getSeoData();
   const canonical = seo.canonicalUrl || SITE_URL;
 
+  const twitterUrl = seo.twitterHandle
+    ? seo.twitterHandle.startsWith("http")
+      ? seo.twitterHandle
+      : `https://x.com/${seo.twitterHandle.replace(/^@/, "")}`
+    : "";
+  const sameAs = [
+    seo.social.facebook,
+    seo.social.instagram,
+    seo.social.tiktok,
+    seo.social.youtube,
+    seo.social.linkedin,
+    seo.social.whatsapp,
+    twitterUrl,
+  ].filter(Boolean);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -61,6 +76,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         name: brand.name.ar,
         url: canonical,
         logo: `${SITE_URL}${seo.ogImage.ar}`,
+        ...(seo.contactEmail ? { email: seo.contactEmail } : {}),
+        ...(seo.contactPhone ? { telephone: seo.contactPhone } : {}),
+        ...(sameAs.length ? { sameAs } : {}),
       },
       {
         "@type": "WebSite",

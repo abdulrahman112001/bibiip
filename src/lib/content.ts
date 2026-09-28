@@ -458,4 +458,14 @@ export const seo = {
   canonicalUrl: "https://www.bibiip.online",
   twitterHandle: "",
   noIndex: false,
+  contactEmail: "",
+  contactPhone: "",
+  social: {
+    facebook: "",
+    instagram: "",
+    tiktok: "",
+    youtube: "",
+    linkedin: "",
+    whatsapp: "",
+  },
 };

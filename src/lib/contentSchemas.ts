@@ -262,6 +262,20 @@ export const contentSchemas: Record<string, FieldMap> = {
     canonicalUrl: T("الرابط الأساسي للموقع (Canonical URL)"),
     twitterHandle: T("حساب X / تويتر (اختياري، مثال: @beepbeep)"),
     noIndex: B("إخفاء الموقع من نتائج البحث (Noindex) - استخدمها وقت التطوير بس"),
+    contactEmail: T("إيميل التواصل (يظهر في نتائج البحث وبيانات الشركة)"),
+    contactPhone: T("رقم الهاتف/واتساب للتواصل (اختياري)"),
+    social: {
+      kind: "object",
+      label: "روابط السوشيال ميديا",
+      fields: {
+        facebook: T("فيسبوك"),
+        instagram: T("انستجرام"),
+        tiktok: T("تيك توك"),
+        youtube: T("يوتيوب"),
+        linkedin: T("لينكدإن"),
+        whatsapp: T("رابط واتساب (مثال: https://wa.me/2010...)"),
+      },
+    },
   },
 };
 
