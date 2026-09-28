@@ -266,7 +266,7 @@ export const contentSchemas: Record<string, FieldMap> = {
     noIndex: B("إخفاء الموقع من نتائج البحث (Noindex) - استخدمها وقت التطوير بس"),
     googleSiteVerification: T("كود تاكيد ملكية الموقع Google Search Console", {
       label: "افتح لوحة Google Search Console",
-      url: "https://search.google.com/search-console",
+      url: "https://search.google.com/search-console?resource_id=https%3A%2F%2Fwww.bibiip.online%2F",
     }),
     contactEmail: T("إيميل التواصل (يظهر في نتائج البحث وبيانات الشركة)"),
     contactPhone: T("رقم الهاتف/واتساب للتواصل (اختياري)"),
