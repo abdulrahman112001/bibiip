@@ -28,7 +28,7 @@ export default function Footer({ brand, data }: Props) {
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
                   <li key={t(link)}>
-                    <a href="#" className="text-sm text-text-muted transition-colors hover:text-brand-yellow-dark">
+                    <a href="#" className="text-sm text-brand-ink transition-colors hover:text-brand-yellow-dark">
                       {t(link)}
                     </a>
                   </li>
