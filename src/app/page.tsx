@@ -13,7 +13,6 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import DeliveryJourney from "@/components/DeliveryJourney";
-import SoundToggle from "@/components/SoundToggle";
 import { getAllContent } from "@/lib/getContent";
 
 export default async function Home() {
@@ -23,7 +22,6 @@ export default async function Home() {
     <>
       <CursorGlow />
       <DeliveryJourney data={content} />
-      <SoundToggle />
       <Header brand={content.brand} navData={content.nav} />
       <main className="flex-1">
         <Hero data={content.hero} />
