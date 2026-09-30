@@ -295,7 +295,7 @@ export const sectionLabels: Record<string, Bilingual> = {
   features: { en: "Features", ar: "المميزات" },
   calculator: { en: "Fare Calculator", ar: "حاسبة الرحلة" },
   walkthrough: { en: "App Walkthrough", ar: "جوا التطبيق" },
-  plans: { en: "Plans", ar: "الباقات" },
+  plans: { en: "Plans", ar: "الاشتراكات" },
   testimonials: { en: "Testimonials", ar: "آراء العملاء" },
   download: { en: "Download CTA", ar: "حمّل التطبيق" },
   faq: { en: "FAQ", ar: "الأسئلة الشائعة" },

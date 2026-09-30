@@ -277,7 +277,7 @@ export const walkthrough = {
 };
 
 export const plans = {
-  eyebrow: { en: "PLANS", ar: "الباقات" } as L,
+  eyebrow: { en: "PLANS", ar: "الاشتراكات" } as L,
   title: {
     en: "Subscribe and save more.",
     ar: "اشترك ووفّر أكتر.",
