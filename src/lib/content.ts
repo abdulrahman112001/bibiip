@@ -23,7 +23,7 @@ export const nav = {
     { href: "#how", label: { en: "How It Works", ar: "إزاي تطلب" } as L },
     { href: "#features", label: { en: "Features", ar: "المميزات" } as L },
     { href: "#calculator", label: { en: "Fare Calculator", ar: "احسب رحلتك" } as L },
-    { href: "#plans", label: { en: "Plans", ar: "الباقات" } as L },
+    { href: "#plans", label: { en: "Plans", ar: "الاشتراكات" } as L },
     { href: "#faq", label: { en: "FAQ", ar: "الأسئلة" } as L },
   ],
   cta: { en: "Download the App", ar: "حمّل التطبيق" } as L,
@@ -214,9 +214,9 @@ export const calculator = {
   } as L,
   serviceLabel: { en: "Service", ar: "الخدمة" } as L,
   serviceOptions: [
-    { key: "rides", label: { en: "Ride", ar: "مشوار" } as L, base: 15, perKm: 5 },
-    { key: "transport", label: { en: "Freight", ar: "نقل" } as L, base: 40, perKm: 9 },
-    { key: "delivery", label: { en: "Delivery", ar: "توصيل" } as L, base: 20, perKm: 6 },
+    { key: "rides", label: { en: "Ride", ar: "مشوار" } as L, perKm: 5 },
+    { key: "transport", label: { en: "Freight", ar: "نقل" } as L, perKm: 9 },
+    { key: "delivery", label: { en: "Delivery", ar: "توصيل" } as L, perKm: 6 },
   ],
   inputs: {
     distance: { en: "Distance (km)", ar: "المسافة (كم)" } as L,

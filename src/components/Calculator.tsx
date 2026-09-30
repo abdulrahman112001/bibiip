@@ -13,13 +13,13 @@ export default function Calculator({ data }: Props) {
   const { t, lang } = useLang();
 
   const [serviceKey, setServiceKey] = useState(data.serviceOptions[0].key);
-  const [distance, setDistance] = useState(8);
+  const [distance, setDistance] = useState(0);
   const [peak, setPeak] = useState(false);
 
   const service = data.serviceOptions.find((s) => s.key === serviceKey)!;
 
   const fare = useMemo(() => {
-    const raw = service.base + service.perKm * distance;
+    const raw = service.perKm * distance;
     return Math.round(peak ? raw * 1.25 : raw);
   }, [service, distance, peak]);
 
@@ -61,8 +61,8 @@ export default function Calculator({ data }: Props) {
                 </div>
                 <input
                   type="range"
-                  min={1}
-                  max={60}
+                  min={0}
+                  max={1000}
                   step={1}
                   value={distance}
                   onChange={(e) => setDistance(Number(e.target.value))}

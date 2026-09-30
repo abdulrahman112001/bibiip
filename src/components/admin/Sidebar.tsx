@@ -155,9 +155,13 @@ function SectionIcon({ name }: { name: string }) {
 export default function Sidebar({
   collapsed,
   onToggle,
+  mobileOpen,
+  onMobileClose,
 }: {
   collapsed: boolean;
   onToggle: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
 }) {
   const { t } = useLang();
   const pathname = usePathname();
@@ -166,8 +170,11 @@ export default function Sidebar({
   return (
     <aside
       className={clsx(
-        "sidebar-gradient flex h-screen shrink-0 flex-col text-white transition-all duration-200",
-        collapsed ? "w-20" : "w-64"
+        "sidebar-gradient fixed inset-y-0 inset-s-0 z-50 flex h-screen w-64 max-w-[82vw] flex-col text-white transition-all duration-200 md:static md:z-auto md:max-w-none md:shrink-0",
+        collapsed ? "md:w-20" : "md:w-64",
+        mobileOpen
+          ? "translate-x-0"
+          : "max-md:ltr:-translate-x-full max-md:rtl:translate-x-full"
       )}
     >
       {/* البراند فوق */}
@@ -180,6 +187,16 @@ export default function Sidebar({
             {t(brandLabel)}
           </span>
         )}
+        <button
+          type="button"
+          onClick={onMobileClose}
+          aria-label="Close menu"
+          className="ms-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white/90 transition-colors hover:bg-white/15 md:hidden"
+        >
+          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="m18 6-12 12M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <nav className="flex-1 space-y-1.5 overflow-y-auto p-3 scrollbar-thin">
@@ -187,6 +204,7 @@ export default function Sidebar({
         <Link
           href="/admin"
           title={t(overviewLabel)}
+          onClick={onMobileClose}
           className={clsx(
             "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-semibold transition-colors",
             overviewActive
@@ -221,6 +239,7 @@ export default function Sidebar({
               key={key}
               href={href}
               title={t(sectionLabels[key])}
+              onClick={onMobileClose}
               className={clsx(
                 "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
                 active
@@ -252,6 +271,7 @@ export default function Sidebar({
             <Link
               href={href}
               title={t(settingsLabel)}
+              onClick={onMobileClose}
               className={clsx(
                 "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-semibold transition-colors",
                 active
@@ -277,7 +297,7 @@ export default function Sidebar({
         type="button"
         onClick={onToggle}
         aria-label="Toggle sidebar"
-        className="flex items-center justify-end gap-2 p-4 text-white/70 transition-colors hover:text-white"
+        className="hidden items-center justify-end gap-2 p-4 text-white/70 transition-colors hover:text-white md:flex"
       >
         {collapsed ? (
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

@@ -6,6 +6,12 @@ import { SoundProvider } from "@/lib/sound";
 import { getSeoData, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 const cairo = Cairo({
   variable: "--font-cairo",
   subsets: ["arabic", "latin"],

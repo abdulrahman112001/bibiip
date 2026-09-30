@@ -36,9 +36,11 @@ function initialsFromEmail(email?: string | null) {
 export default function AdminHeaderClient({
   email,
   onLogout,
+  onMenuToggle,
 }: {
   email?: string | null;
   onLogout: () => Promise<void>;
+  onMenuToggle?: () => void;
 }) {
   const { t, lang, setLang } = useLang();
   const router = useRouter();
@@ -77,6 +79,18 @@ export default function AdminHeaderClient({
 
   return (
     <header className="flex h-20 items-center gap-3 rounded-3xl border border-border bg-white px-4 md:gap-4 md:px-6">
+      {/* زر القائمة للموبايل */}
+      <button
+        type="button"
+        onClick={onMenuToggle}
+        aria-label="Open menu"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border text-slate-500 transition-colors hover:border-brand-yellow hover:text-brand-ink md:hidden"
+      >
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
       {/* البحث */}
       <div className="hidden flex-1 sm:block">
         <form onSubmit={handleSubmit} className="relative">

@@ -145,7 +145,6 @@ export const contentSchemas: Record<string, FieldMap> = {
         fields: {
           key: T("المفتاح"),
           label: L("الاسم"),
-          base: N("السعر الأساسي"),
           perKm: N("السعر لكل كيلومتر"),
         },
       },
@@ -187,7 +186,7 @@ export const contentSchemas: Record<string, FieldMap> = {
     currency: L("العملة"),
     items: {
       kind: "array",
-      label: "الباقات",
+      label: "الاشتراكات",
       of: {
         kind: "object",
         titleField: "price",
