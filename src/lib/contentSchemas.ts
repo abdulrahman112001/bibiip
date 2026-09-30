@@ -184,6 +184,7 @@ export const contentSchemas: Record<string, FieldMap> = {
     body: L("الوصف"),
     perWeek: L("نص (/ أسبوع)"),
     currency: L("العملة"),
+    ctaLabel: L("نص زرار الاشتراك (تحت كل باقة)"),
     items: {
       kind: "array",
       label: "الاشتراكات",

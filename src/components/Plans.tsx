@@ -91,7 +91,7 @@ export default function Plans({ data }: Props) {
                         : "border border-brand-ink/15 text-brand-ink hover:bg-brand-ink/5")
                     }
                   >
-                    {t(data.eyebrow)}
+                    {t(data.ctaLabel ?? data.eyebrow)}
                   </a>
                 </Magnetic>
                 </div>

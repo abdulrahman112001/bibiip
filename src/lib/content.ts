@@ -288,6 +288,7 @@ export const plans = {
   } as L,
   perWeek: { en: "/ week", ar: "/ أسبوع" } as L,
   currency: { en: "EGP", ar: "ج.م" } as L,
+  ctaLabel: { en: "Subscribe", ar: "اشتراك" } as L,
   items: [
     {
       name: { en: "Smart Saver", ar: "موفر ذكي" } as L,
