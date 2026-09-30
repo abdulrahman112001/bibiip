@@ -59,15 +59,33 @@ export default function Calculator({ data }: Props) {
                   <label className="text-sm font-medium text-text-muted">{t(data.inputs.distance)}</label>
                   <span className="text-lg font-extrabold text-brand-ink">{fmt(distance)}</span>
                 </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={1000}
-                  step={1}
-                  value={distance}
-                  onChange={(e) => setDistance(Number(e.target.value))}
-                  className="mt-3 w-full accent-brand-yellow-dark"
-                />
+                <div className="mt-3 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setDistance((d) => Math.max(0, d - 1))}
+                    aria-label="-1 km"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border text-lg font-bold text-brand-ink transition-colors hover:border-brand-yellow-dark hover:bg-brand-yellow-soft"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1000}
+                    step={1}
+                    value={distance}
+                    onChange={(e) => setDistance(Number(e.target.value))}
+                    className="w-full accent-brand-yellow-dark"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDistance((d) => Math.min(1000, d + 1))}
+                    aria-label="+1 km"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border text-lg font-bold text-brand-ink transition-colors hover:border-brand-yellow-dark hover:bg-brand-yellow-soft"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
               <label className="mt-8 flex cursor-pointer items-center gap-3">
