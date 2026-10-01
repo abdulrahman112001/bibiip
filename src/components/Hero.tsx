@@ -30,6 +30,8 @@ type Props = { data: typeof import("@/lib/content").hero };
 export default function Hero({ data }: Props) {
   const { t, img } = useLang();
   const reduce = useReducedMotion();
+  // سكاشن محفوظة قبل إضافة الفيديو كحقل في لوحة التحكم لسه معندهاش قيمة له
+  const videoSrc = img(data.video) || "/brand/action-reel.mp4";
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -127,7 +129,7 @@ export default function Hero({ data }: Props) {
       <section className="sticky top-0 h-screen w-full overflow-hidden bg-brand-yellow-soft">
         <video
           ref={videoRef}
-          src="/brand/action-reel.mp4"
+          src={videoSrc}
           muted
           playsInline
           preload="auto"

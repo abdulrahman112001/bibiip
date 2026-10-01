@@ -14,6 +14,7 @@ export type Field =
   | { kind: "number"; label: string }
   | { kind: "boolean"; label: string }
   | { kind: "image"; label: string }
+  | { kind: "video"; label: string }
   | { kind: "object"; label: string; fields: FieldMap }
   | { kind: "array"; label: string; of: ArrayItemSchema };
 
@@ -29,6 +30,7 @@ const T = (label: string, helpLink?: HelpLink): Field => ({ kind: "text", label,
 const N = (label: string): Field => ({ kind: "number", label });
 const B = (label: string): Field => ({ kind: "boolean", label });
 const IMG = (label: string): Field => ({ kind: "image", label });
+const VID = (label: string): Field => ({ kind: "video", label });
 
 export const contentSchemas: Record<string, FieldMap> = {
   brand: {
@@ -56,6 +58,7 @@ export const contentSchemas: Record<string, FieldMap> = {
     ctaPrimary: L("زرار أساسي"),
     ctaSecondary: L("زرار ثانوي"),
     mockup: IMG("صورة الموبايل"),
+    video: VID("فيديو الهيرو (الخلفية المتحركة فوق الصفحة)"),
     stats: {
       kind: "array",
       label: "الإحصائيات (تحت الأزرار)",

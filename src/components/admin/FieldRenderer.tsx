@@ -34,6 +34,7 @@ function defaultValueForField(field: Field): unknown {
     case "text":
       return "";
     case "image":
+    case "video":
       return { en: "", ar: "" };
     case "number":
       return 0;
@@ -155,6 +156,30 @@ export default function FieldRenderer({ field, value, path, onChange }: Props) {
         </div>
         <p className="mt-1 text-xs text-slate-400">
           لو سبت لغة من غير صورة، الموقع هيستخدم صورة اللغة التانية بدالها.
+        </p>
+      </div>
+    );
+  }
+
+  if (field.kind === "video") {
+    const v = (value as { en?: string; ar?: string } | undefined) ?? { en: "", ar: "" };
+    return (
+      <div>
+        <label className="mb-1.5 block text-sm font-bold text-slate-700">{field.label}</label>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <VideoField
+            label="عربي"
+            value={v.ar ?? ""}
+            onChange={(url) => onChange([...path, "ar"], url)}
+          />
+          <VideoField
+            label="English"
+            value={v.en ?? ""}
+            onChange={(url) => onChange([...path, "en"], url)}
+          />
+        </div>
+        <p className="mt-1 text-xs text-slate-400">
+          لو سبت لغة من غير فيديو، الموقع هيستخدم فيديو اللغة التانية بدالها.
         </p>
       </div>
     );
@@ -358,6 +383,87 @@ function ImageField({
       </div>
       <p className="mt-1 text-xs text-slate-400">
         ارفع صورة جديدة (بتحل محل القديمة أوتوماتيك)، أو حط مسار صورة موجودة يدويًا.
+      </p>
+    </div>
+  );
+}
+
+function VideoField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleFile(file: File) {
+    setUploading(true);
+    setError(null);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/admin/assets", { method: "POST", body: form });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error ?? "فشل رفع الفيديو");
+      onChange(body.url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "حصل خطأ غير متوقع");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-bold text-slate-700">{label}</label>
+      <div className="flex items-center gap-3">
+        <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface">
+          {value ? (
+            <video src={value} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+          ) : (
+            <span className="text-xs text-slate-400">—</span>
+          )}
+        </div>
+
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="/brand/… أو ارفع فيديو"
+              className={inputClass}
+              dir="ltr"
+            />
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              className="shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:border-brand-yellow-dark hover:text-brand-ink disabled:opacity-50"
+            >
+              {uploading ? "بيرفع…" : "ارفع فيديو"}
+            </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="video/*"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFile(file);
+                e.target.value = "";
+              }}
+            />
+          </div>
+          {error && <p className="text-xs font-bold text-red-600">{error}</p>}
+        </div>
+      </div>
+      <p className="mt-1 text-xs text-slate-400">
+        ارفع فيديو جديد (بيحل محل القديم أوتوماتيك)، أو حط مسار فيديو موجود يدويًا.
       </p>
     </div>
   );
