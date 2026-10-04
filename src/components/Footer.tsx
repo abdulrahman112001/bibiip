@@ -6,10 +6,27 @@ import { useLang } from "@/lib/i18n";
 type Props = {
   brand: typeof import("@/lib/content").brand;
   data: typeof import("@/lib/content").footer;
+  seo: typeof import("@/lib/content").seo;
 };
 
-export default function Footer({ brand, data }: Props) {
+function resolveTwitterUrl(handle: string): string {
+  if (!handle) return "";
+  return handle.startsWith("http") ? handle : `https://x.com/${handle.replace(/^@/, "")}`;
+}
+
+export default function Footer({ brand, data, seo }: Props) {
   const { t } = useLang();
+
+  const socialLinks = [
+    { label: "Facebook", href: seo.social.facebook },
+    { label: "Instagram", href: seo.social.instagram },
+    { label: "TikTok", href: seo.social.tiktok },
+    { label: "X", href: resolveTwitterUrl(seo.twitterHandle) },
+    { label: "YouTube", href: seo.social.youtube },
+    { label: "LinkedIn", href: seo.social.linkedin },
+    { label: "WhatsApp", href: seo.social.whatsapp },
+  ].filter((s) => s.href);
+
   return (
     <footer className="border-t border-white/10 bg-brand-ink py-16">
       <div className="mx-auto max-w-7xl px-6">
@@ -42,11 +59,21 @@ export default function Footer({ brand, data }: Props) {
           <p className="text-xs text-white/50">
             © {new Date().getFullYear()} {t(brand.name)}. {t(data.rights)}
           </p>
-          <div className="flex items-center gap-5 text-sm text-white/70">
-            <a href="#" className="transition-colors hover:text-white">LinkedIn</a>
-            <a href="#" className="transition-colors hover:text-white">X</a>
-            <a href="#" className="transition-colors hover:text-white">YouTube</a>
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex items-center gap-5 text-sm text-white/70">
+              {socialLinks.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </footer>
