@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import {
   motion,
   useMotionValueEvent,
@@ -11,12 +10,9 @@ import {
   useTransform,
 } from "framer-motion";
 import Reveal from "./Reveal";
-import Tilt3D from "./Tilt3D";
 import Magnetic from "./Magnetic";
 import AmbientDots from "./AmbientDots";
 import { useLang } from "@/lib/i18n";
-
-const mockupAlt = { en: "Beep Beep app", ar: "تطبيق بيب بيب" };
 
 type Props = { data: typeof import("@/lib/content").hero };
 
@@ -119,7 +115,7 @@ export default function Hero({ data }: Props) {
       >
         <div className="absolute inset-0 grid-bg opacity-30" aria-hidden />
         <AmbientDots theme="ink" />
-        <HeroContent data={data} t={t} img={img} />
+        <HeroContent data={data} t={t} />
       </section>
     );
   }
@@ -161,7 +157,7 @@ export default function Hero({ data }: Props) {
           style={{ opacity: fullHeroOpacity, y: fullHeroY }}
           className="relative mx-auto flex h-full max-w-7xl items-center px-6 pt-16"
         >
-          <HeroContent data={data} t={t} img={img} dark />
+          <HeroContent data={data} t={t} dark />
         </motion.div>
       </section>
     </div>
@@ -171,16 +167,14 @@ export default function Hero({ data }: Props) {
 function HeroContent({
   data,
   t,
-  img,
   dark,
 }: {
   data: Props["data"];
   t: (v: { en: string; ar: string }) => string;
-  img: (v: { en: string; ar: string }) => string;
   dark?: boolean;
 }) {
   return (
-    <div className="relative grid w-full items-center gap-12 lg:grid-cols-2">
+    <div className="relative mx-auto w-full max-w-2xl">
       <div>
         {!dark && (
           <Reveal>
@@ -252,30 +246,6 @@ function HeroContent({
           </dl>
         </Reveal>
       </div>
-
-      <Reveal delay={0.2} className="flex justify-center">
-        <Tilt3D max={12} scale={1.04}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
-          >
-            <motion.div
-              animate={{ y: [0, -14, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Image
-                src={img(data.mockup)}
-                alt={t(mockupAlt)}
-                width={520}
-                height={640}
-                priority
-                className="w-65 drop-shadow-2xl md:w-90"
-              />
-            </motion.div>
-          </motion.div>
-        </Tilt3D>
-      </Reveal>
     </div>
   );
 }

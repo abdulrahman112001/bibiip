@@ -57,7 +57,6 @@ export const contentSchemas: Record<string, FieldMap> = {
     subtitle: L("الوصف", true),
     ctaPrimary: L("زرار أساسي"),
     ctaSecondary: L("زرار ثانوي"),
-    mockup: IMG("صورة الموبايل"),
     video: VID("فيديو الهيرو (الخلفية المتحركة فوق الصفحة)"),
     stats: {
       kind: "array",

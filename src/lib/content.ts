@@ -41,7 +41,6 @@ export const hero = {
   } as L,
   ctaPrimary: { en: "Download the App", ar: "حمّل التطبيق" } as L,
   ctaSecondary: { en: "Explore Services", ar: "اعرف خدماتنا" } as L,
-  mockup: { en: "/brand/hero-mockup.png", ar: "/brand/hero-mockup.png" } as L,
   video: img("/brand/action-reel.mp4"),
   stats: [
     { value: "+50", label: { en: "Coverage areas", ar: "منطقة تغطية" } as L },
