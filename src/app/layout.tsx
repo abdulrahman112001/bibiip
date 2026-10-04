@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import { LanguageProvider } from "@/lib/i18n";
-import { SoundProvider } from "@/lib/sound";
 import { getSeoData, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -106,10 +105,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <LanguageProvider>
-          <SoundProvider>
-            <SmoothScroll />
-            {children}
-          </SoundProvider>
+          <SmoothScroll />
+          {children}
         </LanguageProvider>
       </body>
     </html>

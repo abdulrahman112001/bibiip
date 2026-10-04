@@ -12,7 +12,6 @@ import {
   useTransform,
 } from "framer-motion";
 import { useLang, type L } from "@/lib/i18n";
-import { useSound } from "@/lib/sound";
 
 type Props = { data: typeof import("@/lib/content") };
 
@@ -56,7 +55,6 @@ const ROAD_D = buildRoadPath(10, 11);
 export default function DeliveryJourney({ data }: Props) {
   const reduce = useReducedMotion();
   const { t } = useLang();
-  const { honk } = useSound();
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 80, damping: 20, mass: 0.4 });
@@ -118,7 +116,6 @@ export default function DeliveryJourney({ data }: Props) {
           if (CTA_SECTIONS.has(id) && !honkedRef.current.has(id)) {
             honkedRef.current.add(id);
             setCtaBurst(true);
-            honk();
             setTimeout(() => setCtaBurst(false), 900);
           }
         }
@@ -127,7 +124,7 @@ export default function DeliveryJourney({ data }: Props) {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [reduce, honk]);
+  }, [reduce]);
 
   // جوا سكشن الخدمات: أنهي خدمة بالظبط تحت نص الشاشة دلوقتي
   useEffect(() => {
