@@ -174,7 +174,7 @@ function HeroContent({
   dark?: boolean;
 }) {
   return (
-    <div className="relative mx-auto w-full max-w-2xl">
+    <div className="relative w-full max-w-2xl">
       <div>
         {!dark && (
           <Reveal>
