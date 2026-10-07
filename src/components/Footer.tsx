@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useLang } from "@/lib/i18n";
 import ContactModal from "./ContactModal";
+import SocialIcon, { type SocialPlatform } from "./SocialIcon";
 
 type Props = {
   brand: typeof import("@/lib/content").brand;
@@ -20,15 +21,18 @@ export default function Footer({ brand, data, seo }: Props) {
   const { t } = useLang();
   const [contactOpen, setContactOpen] = useState(false);
 
-  const socialLinks = [
-    { label: "Facebook", short: "F", href: seo.social.facebook },
-    { label: "Instagram", short: "IG", href: seo.social.instagram },
-    { label: "TikTok", short: "TT", href: seo.social.tiktok },
-    { label: "X", short: "X", href: resolveTwitterUrl(seo.twitterHandle) },
-    { label: "YouTube", short: "YT", href: seo.social.youtube },
-    { label: "LinkedIn", short: "in", href: seo.social.linkedin },
-    { label: "WhatsApp", short: "WA", href: seo.social.whatsapp },
-  ].filter((s) => s.href);
+  const allSocialLinks: { label: string; platform: SocialPlatform; href: string }[] = [
+    { label: "Email", platform: "email", href: seo.contactEmail ? `mailto:${seo.contactEmail}` : "" },
+    { label: "Phone", platform: "phone", href: seo.contactPhone ? `tel:${seo.contactPhone.replace(/\s+/g, "")}` : "" },
+    { label: "Facebook", platform: "facebook", href: seo.social.facebook },
+    { label: "Instagram", platform: "instagram", href: seo.social.instagram },
+    { label: "TikTok", platform: "tiktok", href: seo.social.tiktok },
+    { label: "X", platform: "x", href: resolveTwitterUrl(seo.twitterHandle) },
+    { label: "YouTube", platform: "youtube", href: seo.social.youtube },
+    { label: "LinkedIn", platform: "linkedin", href: seo.social.linkedin },
+    { label: "WhatsApp", platform: "whatsapp", href: seo.social.whatsapp },
+  ];
+  const socialLinks = allSocialLinks.filter((s) => s.href);
 
   return (
     <footer className="border-t border-white/10 bg-brand-ink py-16">
@@ -101,18 +105,21 @@ export default function Footer({ brand, data, seo }: Props) {
           </p>
           {socialLinks.length > 0 && (
             <div className="flex items-center gap-2.5">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={s.label}
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white/80 transition-colors hover:bg-brand-yellow hover:text-brand-ink"
-                >
-                  {s.short}
-                </a>
-              ))}
+              {socialLinks.map((s) => {
+                const isExternal = s.platform !== "email" && s.platform !== "phone";
+                return (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                    title={s.label}
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-brand-yellow hover:text-brand-ink"
+                  >
+                    <SocialIcon platform={s.platform} />
+                  </a>
+                );
+              })}
             </div>
           )}
         </div>
