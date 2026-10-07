@@ -37,6 +37,28 @@ export default function Footer({ brand, data, seo }: Props) {
               <span className="text-lg font-extrabold text-white">{t(brand.name)}</span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-white/70">{t(brand.tagline)}</p>
+            {(seo.contactEmail || seo.contactPhone) && (
+              <div className="mt-4 space-y-1.5 text-sm">
+                {seo.contactEmail && (
+                  <a
+                    href={`mailto:${seo.contactEmail}`}
+                    className="block text-white/70 transition-colors hover:text-brand-yellow"
+                    dir="ltr"
+                  >
+                    {seo.contactEmail}
+                  </a>
+                )}
+                {seo.contactPhone && (
+                  <a
+                    href={`tel:${seo.contactPhone.replace(/\s+/g, "")}`}
+                    className="block text-white/70 transition-colors hover:text-brand-yellow"
+                    dir="ltr"
+                  >
+                    {seo.contactPhone}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {data.columns.map((col) => (
