@@ -9,7 +9,8 @@ const subtitle = {
   ar: "الرسائل اللي العملاء بعتوها من فورم \"تواصل معنا\" في الموقع.",
 };
 const emptyLabel = { en: "No messages yet", ar: "لسه مفيش رسائل" };
-const replyLabel = { en: "Reply by email", ar: "رد عبر الإيميل" };
+const replyLabel = { en: "Reply", ar: "رد" };
+const mailtoLabel = { en: "Open in email app", ar: "فتح في برنامج الإيميل" };
 const markUnreadLabel = { en: "Mark as unread", ar: "تعليم كغير مقروءة" };
 const markReadLabel = { en: "Mark as read", ar: "تعليم كمقروءة" };
 const deleteLabel = { en: "Delete", ar: "حذف" };
@@ -18,6 +19,11 @@ const confirmDeleteLabel = {
   ar: "تأكيد حذف الرسالة؟",
 };
 const newLabel = { en: "New", ar: "جديدة" };
+const replyPlaceholder = { en: "Write your reply…", ar: "اكتب ردك هنا…" };
+const sendReplyLabel = { en: "Send reply", ar: "ابعت الرد" };
+const sendingReplyLabel = { en: "Sending…", ar: "جاري الإرسال…" };
+const replySuccess = { en: "✓ Reply sent", ar: "✓ الرد اتبعت" };
+const unexpectedError = { en: "Something went wrong", ar: "حصل خطأ غير متوقع" };
 
 type Message = {
   id: string;
@@ -31,6 +37,7 @@ type Message = {
 export default function MessagesInbox({ initialMessages }: { initialMessages: Message[] }) {
   const { t, lang } = useLang();
   const [messages, setMessages] = useState(initialMessages);
+  const [replyOpenId, setReplyOpenId] = useState<string | null>(null);
   const locale = lang === "ar" ? "ar-EG" : "en-US";
 
   async function toggleRead(id: string, read: boolean) {
@@ -91,11 +98,18 @@ export default function MessagesInbox({ initialMessages }: { initialMessages: Me
               <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">{m.message}</p>
 
               <div className="mt-4 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setReplyOpenId((cur) => (cur === m.id ? null : m.id))}
+                  className="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:border-brand-yellow-dark hover:text-brand-ink"
+                >
+                  {t(replyLabel)}
+                </button>
                 <a
                   href={`mailto:${m.email}?subject=${encodeURIComponent("رد على رسالتك - بيب بيب")}`}
                   className="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:border-brand-yellow-dark hover:text-brand-ink"
                 >
-                  {t(replyLabel)}
+                  {t(mailtoLabel)}
                 </a>
                 <button
                   type="button"
@@ -112,10 +126,74 @@ export default function MessagesInbox({ initialMessages }: { initialMessages: Me
                   {t(deleteLabel)}
                 </button>
               </div>
+
+              {replyOpenId === m.id && (
+                <ReplyBox
+                  messageId={m.id}
+                  onSent={() => {
+                    setMessages((prev) => prev.map((x) => (x.id === m.id ? { ...x, read: true } : x)));
+                    setReplyOpenId(null);
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function ReplyBox({ messageId, onSent }: { messageId: string; onSent: () => void }) {
+  const { t } = useLang();
+  const [body, setBody] = useState("");
+  const [sending, setSending] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function send() {
+    if (!body.trim()) return;
+    setSending(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/messages/${messageId}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body }),
+      });
+      const resBody = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(resBody.error ?? t(unexpectedError));
+      setSuccess(true);
+      setBody("");
+      setTimeout(onSent, 900);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(unexpectedError));
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="mt-3 rounded-xl border border-border bg-bg-elev/40 p-3">
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder={t(replyPlaceholder)}
+        rows={3}
+        className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm outline-none focus:border-brand-yellow-dark"
+      />
+      <div className="mt-2 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={send}
+          disabled={sending || !body.trim()}
+          className="rounded-full bg-brand-yellow px-4 py-1.5 text-xs font-bold text-brand-ink transition-transform hover:scale-105 disabled:opacity-50"
+        >
+          {sending ? t(sendingReplyLabel) : t(sendReplyLabel)}
+        </button>
+        {success && <span className="text-xs font-bold text-green-600">{t(replySuccess)}</span>}
+        {error && <span className="text-xs font-bold text-red-600">{error}</span>}
+      </div>
     </div>
   );
 }
