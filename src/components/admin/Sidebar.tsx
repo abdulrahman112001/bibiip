@@ -9,6 +9,7 @@ import { sectionLabels } from "@/lib/contentSchemas";
 const overviewLabel = { en: "Overview", ar: "نظرة عامة" };
 const sectionsLabel = { en: "Sections", ar: "السكاشن" };
 const settingsLabel = { en: "Settings", ar: "الإعدادات" };
+const messagesLabel = { en: "Messages", ar: "الرسائل" };
 const brandLabel = { en: "Beep Beep", ar: "بيب بيب" };
 
 const keys = Object.keys(sectionLabels);
@@ -143,6 +144,13 @@ function SectionIcon({ name }: { name: string }) {
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
         </svg>
       );
+    case "messages":
+      return (
+        <svg {...common}>
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m4 7 8 6 8-6" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>
@@ -263,6 +271,34 @@ export default function Sidebar({
         })}
 
         <div className="my-2 h-px bg-white/15" />
+
+        {(() => {
+          const href = "/admin/messages";
+          const active = pathname === href;
+          return (
+            <Link
+              href={href}
+              title={t(messagesLabel)}
+              onClick={onMobileClose}
+              className={clsx(
+                "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-semibold transition-colors",
+                active
+                  ? "bg-brand-yellow text-brand-ink shadow-sm"
+                  : "bg-white/10 text-white/90 hover:bg-white/15"
+              )}
+            >
+              <span
+                className={clsx(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+                  active ? "bg-brand-ink text-brand-yellow" : "bg-white/15 text-white"
+                )}
+              >
+                <SectionIcon name="messages" />
+              </span>
+              {!collapsed && <span className="flex-1 truncate text-start">{t(messagesLabel)}</span>}
+            </Link>
+          );
+        })()}
 
         {(() => {
           const href = "/admin/settings";

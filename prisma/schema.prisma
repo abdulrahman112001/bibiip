@@ -44,3 +44,15 @@ model AdminUser {
   passwordHash String
   updatedAt    DateTime @updatedAt
 }
+
+/// رسايل فورم "تواصل معنا" في الموقع - بتتخزن هنا عشان تظهر في لوحة
+/// التحكم، وبرضو بيتبعت إيميل تنبيه لإيميل التواصل المظبوط في سكشن الـ
+/// SEO (لو الإعدادات SMTP متظبطة في .env - شوف src/lib/mailer.ts).
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
