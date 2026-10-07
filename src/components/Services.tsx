@@ -19,7 +19,10 @@ export default function Services({ data }: Props) {
           {data.items.map((s, i) => (
             <Reveal key={s.key} delay={i * 0.08} variant="flip">
               <Tilt3D className="h-full">
-                <div className="group h-full overflow-hidden rounded-3xl border border-border bg-surface transition-all hover:shadow-xl glow-soft">
+                <div
+                  id={`service-${s.key}`}
+                  className="group h-full overflow-hidden rounded-3xl border border-border bg-surface transition-all hover:shadow-xl glow-soft"
+                >
                   <div className="relative h-40 overflow-hidden">
                     <Image
                       src={img(s.image)}

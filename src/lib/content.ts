@@ -423,18 +423,18 @@ export const footer = {
     {
       title: { en: "Services", ar: "الخدمات" } as L,
       links: [
-        { en: "Rides", ar: "مشاوير" } as L,
-        { en: "Freight", ar: "نقل" } as L,
-        { en: "Delivery", ar: "توصيل" } as L,
-        { en: "Groceries", ar: "سوبر ماركت" } as L,
+        { href: "#service-rides", label: { en: "Rides", ar: "مشاوير" } as L },
+        { href: "#service-transport", label: { en: "Freight", ar: "نقل" } as L },
+        { href: "#service-delivery", label: { en: "Delivery", ar: "توصيل" } as L },
+        { href: "#service-market", label: { en: "Groceries", ar: "سوبر ماركت" } as L },
       ],
     },
     {
       title: { en: "Company", ar: "الشركة" } as L,
       links: [
-        { en: "About", ar: "عن بيب بيب" } as L,
-        { en: "Careers", ar: "الوظائف" } as L,
-        { en: "Contact", ar: "تواصل معنا" } as L,
+        { href: "#", label: { en: "About", ar: "عن بيب بيب" } as L },
+        { href: "#", label: { en: "Careers", ar: "الوظائف" } as L },
+        { href: "#contact", label: { en: "Contact", ar: "تواصل معنا" } as L },
       ],
     },
   ],

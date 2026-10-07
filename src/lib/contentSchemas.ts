@@ -250,7 +250,18 @@ export const contentSchemas: Record<string, FieldMap> = {
         titleField: "title",
         fields: {
           title: L("عنوان العمود"),
-          links: { kind: "array", label: "الروابط", of: { kind: "bilingual" } },
+          links: {
+            kind: "array",
+            label: "الروابط",
+            of: {
+              kind: "object",
+              titleField: "href",
+              fields: {
+                href: T("الرابط (#anchor أو #contact لفتح نافذة تواصل)"),
+                label: L("النص"),
+              },
+            },
+          },
         },
       },
     },

@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useLang } from "@/lib/i18n";
+import ContactModal from "./ContactModal";
 
 type Props = {
   brand: typeof import("@/lib/content").brand;
@@ -16,15 +18,16 @@ function resolveTwitterUrl(handle: string): string {
 
 export default function Footer({ brand, data, seo }: Props) {
   const { t } = useLang();
+  const [contactOpen, setContactOpen] = useState(false);
 
   const socialLinks = [
-    { label: "Facebook", href: seo.social.facebook },
-    { label: "Instagram", href: seo.social.instagram },
-    { label: "TikTok", href: seo.social.tiktok },
-    { label: "X", href: resolveTwitterUrl(seo.twitterHandle) },
-    { label: "YouTube", href: seo.social.youtube },
-    { label: "LinkedIn", href: seo.social.linkedin },
-    { label: "WhatsApp", href: seo.social.whatsapp },
+    { label: "Facebook", short: "F", href: seo.social.facebook },
+    { label: "Instagram", short: "IG", href: seo.social.instagram },
+    { label: "TikTok", short: "TT", href: seo.social.tiktok },
+    { label: "X", short: "X", href: resolveTwitterUrl(seo.twitterHandle) },
+    { label: "YouTube", short: "YT", href: seo.social.youtube },
+    { label: "LinkedIn", short: "in", href: seo.social.linkedin },
+    { label: "WhatsApp", short: "WA", href: seo.social.whatsapp },
   ].filter((s) => s.href);
 
   return (
@@ -65,13 +68,28 @@ export default function Footer({ brand, data, seo }: Props) {
             <div key={t(col.title)}>
               <h3 className="text-sm font-bold text-white">{t(col.title)}</h3>
               <ul className="mt-4 space-y-3">
-                {col.links.map((link) => (
-                  <li key={t(link)}>
-                    <a href="#" className="text-sm text-white/70 transition-colors hover:text-brand-yellow">
-                      {t(link)}
-                    </a>
-                  </li>
-                ))}
+                {col.links.map((link) =>
+                  link.href === "#contact" ? (
+                    <li key={t(link.label)}>
+                      <button
+                        type="button"
+                        onClick={() => setContactOpen(true)}
+                        className="text-sm text-white/70 transition-colors hover:text-brand-yellow"
+                      >
+                        {t(link.label)}
+                      </button>
+                    </li>
+                  ) : (
+                    <li key={t(link.label)}>
+                      <a
+                        href={link.href}
+                        className="text-sm text-white/70 transition-colors hover:text-brand-yellow"
+                      >
+                        {t(link.label)}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
           ))}
@@ -82,22 +100,25 @@ export default function Footer({ brand, data, seo }: Props) {
             © {new Date().getFullYear()} {t(brand.name)}. {t(data.rights)}
           </p>
           {socialLinks.length > 0 && (
-            <div className="flex items-center gap-5 text-sm text-white/70">
+            <div className="flex items-center gap-2.5">
               {socialLinks.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors hover:text-white"
+                  title={s.label}
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white/80 transition-colors hover:bg-brand-yellow hover:text-brand-ink"
                 >
-                  {s.label}
+                  {s.short}
                 </a>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </footer>
   );
 }

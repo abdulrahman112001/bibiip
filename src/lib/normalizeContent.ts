@@ -29,7 +29,15 @@ function normalizeValue(field: Field, value: unknown): unknown {
       if (field.of.kind !== "object") return items;
       const itemFields = field.of.fields;
       return items.map((item) => {
-        const v = (item as Record<string, unknown>) ?? {};
+        let v = (item as Record<string, unknown>) ?? {};
+        // ترحيل تلقائي: عناصر قديمة كانت بس {en, ar} خام (زي روابط الفوتر
+        // قبل ما نضيفلها href) - لو السكيما الجديدة فيها حقل "label" بس
+        // العنصر المتخزن شكله bilingual خام (en+ar على طول)، حطه تحت label
+        if ("label" in itemFields && !("label" in v) && "en" in v && "ar" in v) {
+          const bilingual = v as { en?: string; ar?: string };
+          const isContactLink = bilingual.en === "Contact" || bilingual.ar === "تواصل معنا";
+          v = { label: v, href: isContactLink ? "#contact" : "#" };
+        }
         const out: Record<string, unknown> = { ...v };
         for (const [key, f] of Object.entries(itemFields)) out[key] = normalizeValue(f, v[key]);
         return out;
