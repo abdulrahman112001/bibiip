@@ -59,6 +59,12 @@ export async function PUT(req: Request, { params }: Params) {
 
   // نحدّث الصفحة الرئيسية فورًا عشان الزوار يشوفوا التعديل من غير ما ينتظروا
   revalidatePath("/");
+  const publicPagePath: Record<string, string> = {
+    about: "/about",
+    terms: "/terms",
+    privacy: "/privacy",
+  };
+  if (publicPagePath[key]) revalidatePath(publicPagePath[key]);
 
   return NextResponse.json({ key, data: row.data, updatedAt: row.updatedAt });
 }

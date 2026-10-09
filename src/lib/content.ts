@@ -432,13 +432,236 @@ export const footer = {
     {
       title: { en: "Company", ar: "الشركة" } as L,
       links: [
-        { href: "#", label: { en: "About", ar: "عن بيب بيب" } as L },
-        { href: "#", label: { en: "Careers", ar: "الوظائف" } as L },
+        { href: "/about", label: { en: "About", ar: "من نحن" } as L },
+        { href: "/terms", label: { en: "Terms & Conditions", ar: "الشروط والأحكام" } as L },
+        { href: "/privacy", label: { en: "Privacy Policy", ar: "سياسة الخصوصية" } as L },
         { href: "#contact", label: { en: "Contact", ar: "تواصل معنا" } as L },
       ],
     },
   ],
   rights: { en: "All rights reserved.", ar: "كل الحقوق محفوظة." } as L,
+};
+
+export type LegalPageContent = {
+  eyebrow: L;
+  title: L;
+  description: L;
+  sections: { title: L; body: L[] }[];
+};
+
+export const about: LegalPageContent = {
+  eyebrow: { en: "ABOUT US", ar: "من نحن" },
+  title: {
+    en: "Building a simpler, faster and more convenient transport experience.",
+    ar: "نبني تجربة نقل وتوصيل أبسط، أسرع وأكثر راحة.",
+  },
+  description: {
+    en: "Beep Beep brings everyday services together in one place. Book a ride, move goods, send a parcel or shop for groceries through a clear and easy experience.",
+    ar: "في بيب بيب نعمل على تحويل الخدمات اليومية إلى تجربة مرنة وموثوقة، بحيث يمكنك طلب المشوار، النقل، التوصيل، أو التسوق من نقطة واحدة، بتجربة واضحة وسهلة من أول نقرة لآخرها.",
+  },
+  sections: [
+    {
+      title: { en: "Our vision", ar: "رؤيتنا" },
+      body: [
+        {
+          en: "We believe everyday logistics should be accessible without unnecessary complexity, long waits or switching between multiple apps.",
+          ar: "نؤمن بأن الخدمات اللوجستية اليومية يجب أن تكون في متناول الجميع، دون تعقيد أو انتظار طويل، ودون خسارة الوقت في التنقل بين تطبيقات كثيرة.",
+        },
+        {
+          en: "Beep Beep brings personal transport, freight, delivery and shopping together in one platform to make everyday life easier across Egypt.",
+          ar: "لذلك بنيت بيب بيب لتجمع بين النقل الشخصي، النقل التجاري، التوصيل، والتسوق في منصة موحدة تجعل الحياة اليومية أسهل لكل مستخدم في مصر.",
+        },
+      ],
+    },
+    {
+      title: { en: "What we believe in", ar: "ما الذي نؤمن به" },
+      body: [
+        {
+          en: "Clarity: pricing, routes and order details should be clear before a user confirms.",
+          ar: "الوضوح: السعر موضح، المسار واضح، والطلب يتم بفهم كامل من المستخدم قبل التأكيد.",
+        },
+        {
+          en: "Reliability: we aim to provide a respectful, dependable service and keep users informed along the way.",
+          ar: "الاعتمادية: نعمل مع فرق ومندوبين وسائقين يتعاملون باحترام وبأعلى مستوى من الالتزام في التوقيت والخدمة.",
+        },
+        {
+          en: "Convenience: an integrated app should help you get things done quickly and with less effort.",
+          ar: "الراحة: هدفنا هو توفير تجربة سلسة عبر تطبيق متكامل، يساعدك على إنجاز احتياجاتك بسرعة وهدوء.",
+        },
+      ],
+    },
+    {
+      title: { en: "How we work", ar: "كيف نعمل" },
+      body: [
+        {
+          en: "We bring transport and delivery services into one app, with order tracking, driver or courier details and in-app communication to support each step.",
+          ar: "نقوم بتجميع خدمات النقل والتوصيل داخل تطبيق واحد، مع متابعة فورية للطلب، ومعلومات دقيقة عن السائق أو المندوب، وتواصل مباشر داخل التطبيق لتسهيل كل خطوة من الرحلة.",
+        },
+        {
+          en: "Our goal is to make useful services dependable, accessible and easy to use in the daily life of Egyptian cities.",
+          ar: "نستهدف تمكين المستخدم من الحصول على خدمة موثوقة، متاحة، وسريعة، مع تجربة مستخدم بسيطة تناسب التفاعل اليومي في المدن المصرية.",
+        },
+      ],
+    },
+  ],
+};
+
+export const terms: LegalPageContent = {
+  eyebrow: { en: "TERMS & CONDITIONS", ar: "الشروط والأحكام" },
+  title: {
+    en: "Terms and conditions for using Beep Beep services",
+    ar: "الشروط والأحكام لاستخدام خدمات بيب بيب",
+  },
+  description: {
+    en: "By using Beep Beep, you agree to these terms, which help support a safe and transparent experience for users, drivers, couriers and the service.",
+    ar: "باستخدامك خدمات بيب بيب، فإنك توافق على الالتزام بالشروط المذكورة هنا، بما يضمن تجربة آمنة وشفافة للمستخدمين والسائقين والمندوبين والخدمة ككل.",
+  },
+  sections: [
+    {
+      title: { en: "1. Acceptance of terms", ar: "1. قبول الشروط" },
+      body: [
+        {
+          en: "Using the app, website or related services means that you accept and agree to follow these terms and conditions.",
+          ar: "يُعد استخدامك للتطبيق أو الموقع أو أي خدمات مرتبطة به دليلاً على قبولك بهذه الشروط والأحكام، والتزامك باتباعها في جميع الأوقات.",
+        },
+        {
+          en: "If you do not agree with any part of these terms, please do not use our services or access the app.",
+          ar: "إذا كنت لا توافق على أي جزء من هذه الشروط، يطلب منا عدم استخدام خدماتنا أو الدخول إلى التطبيق.",
+        },
+      ],
+    },
+    {
+      title: { en: "2. Our services", ar: "2. خدماتنا" },
+      body: [
+        {
+          en: "Beep Beep offers rides, freight, delivery and shopping services, subject to availability in your area and our operational capacity.",
+          ar: "تقدم بيب بيب خدمات النقل الشخصي، نقل البضائع، التوصيل، والتسوق من المتاجر، وفقاً للمنطقة المتاحة والقدرات التشغيلية في كل لحظة.",
+        },
+        {
+          en: "Services may depend on time, demand and geographic coverage, and may be changed or limited due to operational conditions or applicable regulations.",
+          ar: "قد تخضع بعض الخدمات للتوفر الزمني، والطلبات، والنطاق الجغرافي، وقد يحدث تعديل أو تقليص في الخدمة بناءً على الظروف التشغيلية أو اللوائح المعمول بها.",
+        },
+      ],
+    },
+    {
+      title: { en: "3. User responsibilities", ar: "3. مسؤوليات المستخدم" },
+      body: [
+        {
+          en: "Users must provide accurate information and must not use the service for unlawful activity or in a way that compromises safety.",
+          ar: "يلتزم المستخدم بتقديم معلومات صحيحة ودقيقة عند الطلب، وعدم استخدام الخدمة في أنشطة غير قانونية أو مخالفة للآداب العامة أو السلامة.",
+        },
+        {
+          en: "Users must cooperate with drivers and couriers during pickup and delivery and must not create unsafe conditions or obstruct the service.",
+          ar: "كما يلتزم المستخدم بالتعاون مع السائق أو المندوب عند الاستلام والتسليم، وعدم إعاقة سير الخدمة أو فرض ظروف غير آمنة.",
+        },
+      ],
+    },
+    {
+      title: { en: "4. Pricing and payment", ar: "4. الأسعار والدفع" },
+      body: [
+        {
+          en: "Where shown, prices are displayed before an order is confirmed so users can review them before proceeding.",
+          ar: "قد يتم عرض الأسعار قبل تأكيد الطلب بشكل واضح، ويُعد السعر المعلن جزءاً من الشروط لفهم العميل قبل إتمام الخدمة.",
+        },
+        {
+          en: "Payment methods vary by service and may include cash or the in-app wallet. Users remain responsible for paying the amount due.",
+          ar: "تختلف طريقة الدفع حسب نوع الخدمة، وقد تشمل الدفع النقدي أو الدفع من خلال المحفظة داخل التطبيق، وفي جميع الأحوال يكون التزام المستخدم بدفع المبلغ المستحق.",
+        },
+      ],
+    },
+    {
+      title: { en: "5. Changes and suspension", ar: "5. التعديلات والإنهاء" },
+      body: [
+        {
+          en: "Beep Beep may update its services, terms, prices or operating policies as needed, and will provide notice when appropriate.",
+          ar: "تحتفظ بيب بيب بالحق في تعديل الخدمات أو الشروط أو الأسعار أو سياسات التشغيل حسب الحاجة، مع إشعار مناسب عند الإمكان.",
+        },
+        {
+          en: "We may suspend or deactivate an account if these terms are breached or use of the service may harm the platform or other users.",
+          ar: "كما يحق للشركة إيقاف أو تعليق حساب أي مستخدم في حال مخالفة هذه الشروط أو الاستخدام غير الملائم أو أي نشاط قد يضر بالمنصة أو المستخدمين الآخرين.",
+        },
+      ],
+    },
+  ],
+};
+
+export const privacy: LegalPageContent = {
+  eyebrow: { en: "PRIVACY POLICY", ar: "سياسة الخصوصية" },
+  title: {
+    en: "Privacy policy and protection of user data",
+    ar: "سياسة الخصوصية وحماية بيانات المستخدمين",
+  },
+  description: {
+    en: "We respect your privacy and handle your information responsibly. This policy explains what we collect, why we use it and how we protect it when you use Beep Beep.",
+    ar: "نحترم خصوصيتك، ونتعامل مع بياناتك بمسؤولية وشفافية. هذه السياسة تشرح ما نقوم بجمعه، لماذا نستخدمه، وكيف نحمي المعلومات الخاصة بك عند استخدام خدمات بيب بيب.",
+  },
+  sections: [
+    {
+      title: { en: "1. Information we collect", ar: "1. المعلومات التي نجمعها" },
+      body: [
+        {
+          en: "We may collect basic information such as your name, phone number, location, order details, app interactions and payment information where needed for the service.",
+          ar: "قد نقوم بجمع معلومات أساسية مثل الاسم، رقم الهاتف، الموقع، تفاصيل الطلب، سجل التفاعل مع التطبيق، ومعلومات الدفع عند الحاجة وفقاً لطرق الخدمة المتاحة.",
+        },
+        {
+          en: "We may also collect trip or delivery information to track an order, provide the service and improve its performance.",
+          ar: "كما قد نحتاج إلى جمع بيانات متعلقة بالرحلة أو التوصيل من أجل متابعة الطلب، توفير الخدمة، وتحسين الأداء والتجربة.",
+        },
+      ],
+    },
+    {
+      title: { en: "2. How we use information", ar: "2. استخدام المعلومات" },
+      body: [
+        {
+          en: "We use information to provide the service, connect orders with drivers or couriers, support location tracking and communication, and manage payments where applicable.",
+          ar: "نستخدم البيانات لتقديم الخدمة بفعالية، مثل ربط الطلب بالسائق أو المندوب، تتبع الموقع، التواصل داخل التطبيق، وإدارة الفواتير أو المدفوعات عند الحاجة.",
+        },
+        {
+          en: "We may also use information to improve the app, understand how it is used and develop services and features.",
+          ar: "كما قد نستخدم البيانات لتحسين جودة التطبيق، تحليل التفاعل، وتطوير المميزات والخدمات بناءً على الاحتياجات التشغيلية والمرجعية.",
+        },
+      ],
+    },
+    {
+      title: { en: "3. Data protection", ar: "3. حماية البيانات" },
+      body: [
+        {
+          en: "We take appropriate measures to protect user information from unauthorized access, unlawful use, alteration or loss.",
+          ar: "نتخذ تدابير مناسبة لحماية بيانات المستخدمين من الوصول غير المصرح به، أو الاستخدام غير القانوني، أو التعديل أو الفقدان.",
+        },
+        {
+          en: "We use your information only as needed to provide and improve the service, subject to applicable policies and regulations.",
+          ar: "ونلتزم باستخدام بياناتك فقط داخل النطاق الضروري لتقديم الخدمة وتحسينها، وفقاً للسياسات الداخلية واللوائح المعمول بها.",
+        },
+      ],
+    },
+    {
+      title: { en: "4. Sharing information", ar: "4. مشاركة البيانات" },
+      body: [
+        {
+          en: "We may share necessary information with drivers, couriers or service partners to fulfil an order safely and effectively.",
+          ar: "قد نشارك بعض البيانات مع الأطراف الضرورية لتقديم الخدمة مثل السائقين أو المندوبين أو شركاء الخدمات التشغيلية، وذلك فقط ضمن المعلومات المطلوبة لتنفيذ الطلب بأمان وكفاءة.",
+        },
+        {
+          en: "We do not sell or rent user information to third parties, except where required by law or necessary to provide the service.",
+          ar: "ولا نبيع أو نؤجر بيانات المستخدمين لأي طرف ثالث في غير الحالات التي يتطلبها القانون أو تنفيذ الخدمة بشكل ضروري ومعتمد.",
+        },
+      ],
+    },
+    {
+      title: { en: "5. Your rights", ar: "5. حقوق المستخدم" },
+      body: [
+        {
+          en: "You may request access to, updates or corrections to your information, or request its deletion, subject to applicable rules and service requirements.",
+          ar: "لك الحق في طلب الاطلاع على بياناتك، أو تحديثها، أو تصحيحها، أو طلب حذفها في حدود اللوائح والقواعد المعتمدة داخل التطبيق والخدمة.",
+        },
+        {
+          en: "For questions or requests about your privacy or information, contact us through the official channels listed in the app or on our website.",
+          ar: "إذا كان لديك أي سؤال أو طلب يتعلق بخصوصيتك أو بياناتك، يمكنك التواصل معنا عبر القنوات الرسمية المذكورة في التطبيق أو الموقع الإلكتروني.",
+        },
+      ],
+    },
+  ],
 };
 
 export const seo = {

@@ -32,6 +32,28 @@ const B = (label: string): Field => ({ kind: "boolean", label });
 const IMG = (label: string): Field => ({ kind: "image", label });
 const VID = (label: string): Field => ({ kind: "video", label });
 
+const legalPageSchema: FieldMap = {
+  eyebrow: L("الشارة الصغيرة"),
+  title: L("العنوان الرئيسي", true),
+  description: L("الوصف", true),
+  sections: {
+    kind: "array",
+    label: "أقسام المحتوى",
+    of: {
+      kind: "object",
+      titleField: "title",
+      fields: {
+        title: L("عنوان القسم"),
+        body: {
+          kind: "array",
+          label: "الفقرات",
+          of: { kind: "bilingual" },
+        },
+      },
+    },
+  },
+};
+
 export const contentSchemas: Record<string, FieldMap> = {
   brand: {
     name: L("اسم البراند"),
@@ -268,6 +290,10 @@ export const contentSchemas: Record<string, FieldMap> = {
     rights: L("نص حقوق النشر"),
   },
 
+  about: legalPageSchema,
+  terms: legalPageSchema,
+  privacy: legalPageSchema,
+
   seo: {
     metaTitle: L("عنوان الصفحة (Title Tag)"),
     metaDescription: L("وصف الصفحة (Meta Description)", true),
@@ -313,5 +339,8 @@ export const sectionLabels: Record<string, Bilingual> = {
   download: { en: "Download CTA", ar: "حمّل التطبيق" },
   faq: { en: "FAQ", ar: "الأسئلة الشائعة" },
   footer: { en: "Footer", ar: "الفوتر" },
+  about: { en: "About Us", ar: "من نحن" },
+  terms: { en: "Terms & Conditions", ar: "الشروط والأحكام" },
+  privacy: { en: "Privacy Policy", ar: "سياسة الخصوصية" },
   seo: { en: "SEO", ar: "تحسين محركات البحث (SEO)" },
 };
