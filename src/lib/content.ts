@@ -435,6 +435,7 @@ export const footer = {
         { href: "/about", label: { en: "About", ar: "من نحن" } as L },
         { href: "/terms", label: { en: "Terms & Conditions", ar: "الشروط والأحكام" } as L },
         { href: "/privacy", label: { en: "Privacy Policy", ar: "سياسة الخصوصية" } as L },
+        { href: "/replacement-policy", label: { en: "Replacement Policy", ar: "سياسة الاستبدال" } as L },
         { href: "#contact", label: { en: "Contact", ar: "تواصل معنا" } as L },
       ],
     },
@@ -658,6 +659,81 @@ export const privacy: LegalPageContent = {
         {
           en: "For questions or requests about your privacy or information, contact us through the official channels listed in the app or on our website.",
           ar: "إذا كان لديك أي سؤال أو طلب يتعلق بخصوصيتك أو بياناتك، يمكنك التواصل معنا عبر القنوات الرسمية المذكورة في التطبيق أو الموقع الإلكتروني.",
+        },
+      ],
+    },
+  ],
+};
+
+export const replacementPolicy: LegalPageContent = {
+  eyebrow: { en: "REPLACEMENT POLICY", ar: "سياسة الاستبدال" },
+  title: {
+    en: "Replacement and exchange policy for orders",
+    ar: "سياسة استبدال الطلبات",
+  },
+  description: {
+    en: "We want every order to arrive the way you expect. This policy explains when a replacement is available for parcel, grocery and freight orders, and how to request one.",
+    ar: "بنحرص إن كل طلب يوصلك بالشكل اللي تتوقعه. السياسة دي بتوضح إمتى يكون الاستبدال متاح لطلبات التوصيل والسوبر ماركت والنقل، وإزاي تطلبه.",
+  },
+  sections: [
+    {
+      title: { en: "1. Scope of this policy", ar: "1. نطاق السياسة" },
+      body: [
+        {
+          en: "This policy applies to grocery, parcel delivery and freight orders placed through Beep Beep where the item received differs from what was ordered or arrived damaged.",
+          ar: "السياسة دي بتطبّق على طلبات السوبر ماركت والتوصيل والنقل اللي بتتم من خلال بيب بيب، في حالة إن الصنف اللي وصلك مختلف عن اللي طلبته أو وصل تالف.",
+        },
+        {
+          en: "Ride-hailing trips are not covered by this policy, since there is no physical item to replace; trip-related concerns are handled through in-app support.",
+          ar: "خدمة المشاوير مش مشمولة في السياسة دي لأنه مفيش صنف مادي يتم استبداله؛ أي ملاحظات على الرحلة بتتعامل معاها من خلال الدعم جوا التطبيق.",
+        },
+      ],
+    },
+    {
+      title: { en: "2. When a replacement applies", ar: "2. إمتى يكون الاستبدال متاح" },
+      body: [
+        {
+          en: "A replacement can be requested when the delivered item is damaged, expired, significantly different from the listing, or missing from the order.",
+          ar: "تقدر تطلب استبدال لو الصنف اللي استلمته وصل تالف، أو منتهي الصلاحية، أو مختلف بشكل واضح عن اللي طلبته، أو ناقص من الطلب.",
+        },
+        {
+          en: "Replacement requests must be reported within 24 hours of delivery, along with a short description and, where possible, a photo of the item received.",
+          ar: "لازم تبلّغنا بطلب الاستبدال خلال 24 ساعة من وقت الاستلام، مع وصف قصير للمشكلة وصورة للصنف لو كان ده ممكن.",
+        },
+      ],
+    },
+    {
+      title: { en: "3. How to request a replacement", ar: "3. إزاي تطلب استبدال" },
+      body: [
+        {
+          en: "Open the order from your order history in the app and choose \"Report an issue\", or contact us through the \"Contact us\" form on the website with your order details.",
+          ar: "افتح الطلب من سجل طلباتك جوا التطبيق واختار \"الإبلاغ عن مشكلة\"، أو تواصل معانا من خلال فورم \"تواصل معنا\" في الموقع مع ذكر تفاصيل الطلب.",
+        },
+        {
+          en: "Our support team reviews each request and responds with the outcome — a replacement item, a redelivery, or store credit — within two business days.",
+          ar: "فريق الدعم بيراجع كل طلب وبيردلك بالنتيجة — استبدال الصنف، أو إعادة توصيل، أو رصيد داخل التطبيق — خلال يومي عمل.",
+        },
+      ],
+    },
+    {
+      title: { en: "4. Exclusions", ar: "4. استثناءات" },
+      body: [
+        {
+          en: "Items that were used, opened beyond what is needed to inspect them, or reported after the 24-hour window are generally not eligible for replacement.",
+          ar: "الأصناف اللي اتستخدمت، أو اتفتحت أكتر من اللي محتاجينه عشان تتفحصها، أو اتبلّغ عنها بعد الـ 24 ساعة، بشكل عام مش بتكون مؤهلة للاستبدال.",
+        },
+        {
+          en: "Freight shipments are assessed case by case, since replacement may not be possible for custom or bulk cargo; a refund or compensation may apply instead.",
+          ar: "شحنات النقل بتتقيّم كل حالة لوحدها، لأن الاستبدال ممكن يكون مش متاح للشحنات المخصصة أو بالجملة، وفي الحالة دي ممكن يتطبّق استرداد أو تعويض بدل الاستبدال.",
+        },
+      ],
+    },
+    {
+      title: { en: "5. Need help?", ar: "5. محتاج مساعدة؟" },
+      body: [
+        {
+          en: "If you are not sure whether your order qualifies for a replacement, reach out through the contact channels listed in the app or on our website and our team will guide you.",
+          ar: "لو مش متأكد إن طلبك مؤهل للاستبدال، تواصل معانا من خلال قنوات التواصل المذكورة في التطبيق أو الموقع وفريقنا هيساعدك تعرف الخطوة الجاية.",
         },
       ],
     },

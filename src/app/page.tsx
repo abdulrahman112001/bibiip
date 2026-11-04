@@ -36,7 +36,17 @@ export default async function Home() {
         <Download data={content.download} />
         <FAQ data={content.faq} />
       </main>
-      <Footer brand={content.brand} data={content.footer} seo={content.seo} />
+      <Footer
+        brand={content.brand}
+        data={content.footer}
+        seo={content.seo}
+        pages={{
+          about: content.about,
+          terms: content.terms,
+          privacy: content.privacy,
+          replacementPolicy: content.replacementPolicy,
+        }}
+      />
     </>
   );
 }

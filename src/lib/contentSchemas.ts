@@ -293,6 +293,7 @@ export const contentSchemas: Record<string, FieldMap> = {
   about: legalPageSchema,
   terms: legalPageSchema,
   privacy: legalPageSchema,
+  replacementPolicy: legalPageSchema,
 
   seo: {
     metaTitle: L("عنوان الصفحة (Title Tag)"),
@@ -342,5 +343,6 @@ export const sectionLabels: Record<string, Bilingual> = {
   about: { en: "About Us", ar: "من نحن" },
   terms: { en: "Terms & Conditions", ar: "الشروط والأحكام" },
   privacy: { en: "Privacy Policy", ar: "سياسة الخصوصية" },
+  replacementPolicy: { en: "Replacement Policy", ar: "سياسة الاستبدال" },
   seo: { en: "SEO", ar: "تحسين محركات البحث (SEO)" },
 };

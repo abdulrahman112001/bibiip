@@ -63,6 +63,7 @@ export async function PUT(req: Request, { params }: Params) {
     about: "/about",
     terms: "/terms",
     privacy: "/privacy",
+    replacementPolicy: "/replacement-policy",
   };
   if (publicPagePath[key]) revalidatePath(publicPagePath[key]);
 

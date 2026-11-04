@@ -11,9 +11,13 @@ type Props = {
   navData: typeof import("@/lib/content").nav;
   footer: typeof import("@/lib/content").footer;
   seo: typeof import("@/lib/content").seo;
+  pages: Record<
+    "about" | "terms" | "privacy" | "replacementPolicy",
+    Pick<LegalPageContent, "eyebrow" | "sections">
+  >;
 };
 
-export default function InfoPageView({ page, brand, navData, footer, seo }: Props) {
+export default function InfoPageView({ page, brand, navData, footer, seo, pages }: Props) {
   const { t } = useLang();
 
   return (
@@ -25,7 +29,7 @@ export default function InfoPageView({ page, brand, navData, footer, seo }: Prop
             {t(page.eyebrow)}
           </div>
 
-          <h1 className="max-w-3xl text-4xl font-black leading-tight text-brand-ink md:text-5xl">
+          <h1 id="top" className="scroll-mt-28 max-w-3xl text-4xl font-black leading-tight text-brand-ink md:text-5xl">
             {t(page.title)}
           </h1>
 
@@ -37,7 +41,8 @@ export default function InfoPageView({ page, brand, navData, footer, seo }: Prop
             {page.sections.map((section, index) => (
               <article
                 key={`${section.title.ar}-${index}`}
-                className="rounded-[28px] border border-border bg-white p-6 shadow-[0_20px_60px_-35px_rgba(83,40,19,0.28)] md:p-8"
+                id={`section-${index + 1}`}
+                className="scroll-mt-28 rounded-[28px] border border-border bg-white p-6 shadow-[0_20px_60px_-35px_rgba(83,40,19,0.28)] md:p-8"
               >
                 <h2 className="text-2xl font-extrabold text-brand-ink">{t(section.title)}</h2>
                 <div className="mt-4 space-y-4 text-base leading-8 text-text-muted">
@@ -50,7 +55,7 @@ export default function InfoPageView({ page, brand, navData, footer, seo }: Prop
           </div>
         </section>
       </main>
-      <Footer brand={brand} data={footer} seo={seo} />
+      <Footer brand={brand} data={footer} seo={seo} pages={pages} />
     </>
   );
 }

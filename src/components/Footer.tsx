@@ -2,14 +2,19 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/i18n";
+import type { LegalPageContent } from "@/lib/content";
 import ContactModal from "./ContactModal";
 import SocialIcon, { type SocialPlatform } from "./SocialIcon";
+
+type FooterPage = Pick<LegalPageContent, "eyebrow" | "sections">;
 
 type Props = {
   brand: typeof import("@/lib/content").brand;
   data: typeof import("@/lib/content").footer;
   seo: typeof import("@/lib/content").seo;
+  pages: Record<"about" | "terms" | "privacy" | "replacementPolicy", FooterPage>;
 };
 
 function resolveTwitterUrl(handle: string): string {
@@ -17,9 +22,16 @@ function resolveTwitterUrl(handle: string): string {
   return handle.startsWith("http") ? handle : `https://x.com/${handle.replace(/^@/, "")}`;
 }
 
-export default function Footer({ brand, data, seo }: Props) {
+export default function Footer({ brand, data, seo, pages }: Props) {
   const { t } = useLang();
+  const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
+  const pageGroups = [
+    { key: "about", page: pages.about },
+    { key: "terms", page: pages.terms },
+    { key: "privacy", page: pages.privacy },
+    { key: "replacement-policy", page: pages.replacementPolicy },
+  ] as const;
 
   const allSocialLinks: { label: string; platform: SocialPlatform; href: string }[] = [
     { label: "Email", platform: "email", href: seo.contactEmail ? `mailto:${seo.contactEmail}` : "" },
@@ -37,7 +49,7 @@ export default function Footer({ brand, data, seo }: Props) {
   return (
     <footer className="border-t border-white/10 bg-brand-ink py-16">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 md:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-5">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
               <Image src="/brand/logo.png" alt={t(brand.name)} width={36} height={36} className="rounded-lg" />
@@ -64,7 +76,7 @@ export default function Footer({ brand, data, seo }: Props) {
                   ) : (
                     <li key={t(link.label)}>
                       <a
-                        href={link.href}
+                        href={link.href.startsWith("#") && pathname !== "/" ? `/${link.href}` : link.href}
                         className="text-sm text-white/70 transition-colors hover:text-brand-yellow"
                       >
                         {t(link.label)}
@@ -75,6 +87,41 @@ export default function Footer({ brand, data, seo }: Props) {
               </ul>
             </div>
           ))}
+
+          <div>
+            <h3 className="text-sm font-bold text-white">
+              {t({ en: "Page sections", ar: "أقسام الصفحات" })}
+            </h3>
+            <div className="mt-4 space-y-4">
+              {pageGroups.map(({ key, page }) => (
+                <details key={key} className="group">
+                  <summary className="cursor-pointer text-sm font-semibold text-white/80 transition-colors hover:text-brand-yellow">
+                    {t(page.eyebrow)}
+                  </summary>
+                  <ul className="mt-2 space-y-2 border-s-2 border-white/15 ps-3">
+                    <li>
+                      <a
+                        href={`/${key}#top`}
+                        className="text-xs text-white/60 transition-colors hover:text-brand-yellow"
+                      >
+                        {t({ en: "Page introduction", ar: "مقدمة الصفحة" })}
+                      </a>
+                    </li>
+                    {page.sections.map((section, index) => (
+                      <li key={`${key}-${index}`}>
+                        <a
+                          href={`/${key}#section-${index + 1}`}
+                          className="text-xs text-white/60 transition-colors hover:text-brand-yellow"
+                        >
+                          {t(section.title)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
