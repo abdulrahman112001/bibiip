@@ -67,7 +67,7 @@ export default function Header({ brand, navData }: Props) {
           scrolled ? "py-3" : "py-5"
         )}
       >
-        <Link href="#" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <Image
             src="/brand/logo.png"
             alt={t(brand.name)}
