@@ -761,6 +761,8 @@ export const seo = {
   googleSiteVerification: "",
   contactEmail: "",
   contactPhone: "",
+  address: { en: "", ar: "" } as L,
+  addressMapUrl: "",
   social: {
     facebook: "",
     instagram: "",

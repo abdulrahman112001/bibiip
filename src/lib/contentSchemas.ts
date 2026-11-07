@@ -310,6 +310,11 @@ export const contentSchemas: Record<string, FieldMap> = {
     }),
     contactEmail: T("إيميل التواصل (يظهر في نتائج البحث وبيانات الشركة)"),
     contactPhone: T("رقم الهاتف/واتساب للتواصل (اختياري)"),
+    address: L("عنوان الشركة (يظهر في الفوتر)"),
+    addressMapUrl: T("رابط العنوان على Google Maps (افتح خرائط جوجل، دوس Share، وانسخ اللينك هنا)", {
+      label: "افتح Google Maps",
+      url: "https://www.google.com/maps",
+    }),
     social: {
       kind: "object",
       label: "روابط السوشيال ميديا",

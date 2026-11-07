@@ -56,6 +56,30 @@ export default function Footer({ brand, data, seo, pages }: Props) {
               <span className="text-lg font-extrabold text-white">{t(brand.name)}</span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-white/70">{t(brand.tagline)}</p>
+            {t(seo.address) && (
+              <a
+                href={seo.addressMapUrl || undefined}
+                target={seo.addressMapUrl ? "_blank" : undefined}
+                rel={seo.addressMapUrl ? "noopener noreferrer" : undefined}
+                className="mt-4 flex max-w-xs items-start gap-2 text-sm text-white/70 transition-colors hover:text-brand-yellow"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mt-0.5 shrink-0"
+                >
+                  <path d="M12 21s-7-6.3-7-11.5A7 7 0 0 1 19 9.5C19 14.7 12 21 12 21Z" />
+                  <circle cx="12" cy="9.5" r="2.3" />
+                </svg>
+                <span>{t(seo.address)}</span>
+              </a>
+            )}
           </div>
 
           {data.columns.map((col) => (

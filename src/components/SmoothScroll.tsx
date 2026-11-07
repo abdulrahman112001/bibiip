@@ -19,6 +19,10 @@ export default function SmoothScroll() {
       duration: 1.1,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      // من غير دا، لينكات الـ#anchor (في الهيدر والفوتر) بتتعارض مع
+      // السكرول الناعم بتاع lenis ومحتاجة offset عشان الهيدر الثابت
+      // ملخبطة صح. الـoffset سالب عشان العنصر ميضيعش تحت الهيدر.
+      anchors: { offset: -96 },
     });
 
     let rafId: number;

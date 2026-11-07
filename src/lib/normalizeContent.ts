@@ -9,6 +9,22 @@ import type { Field, FieldMap } from "./contentSchemas";
  */
 function normalizeValue(field: Field, value: unknown): unknown {
   switch (field.kind) {
+    // حقل جديد (bilingual/text/number/boolean) اتضاف للسكيما بعد ما
+    // المحتوى ده اتخزن في قاعدة البيانات - من غير القيم الافتراضية دي
+    // هيرجع undefined ويكسر أي استخدام للقيمة في الصفحة
+    case "bilingual": {
+      if (value && typeof value === "object") {
+        const v = value as { en?: string; ar?: string };
+        return { en: v.en ?? v.ar ?? "", ar: v.ar ?? v.en ?? "" };
+      }
+      return { en: "", ar: "" };
+    }
+    case "text":
+      return typeof value === "string" ? value : "";
+    case "number":
+      return typeof value === "number" ? value : 0;
+    case "boolean":
+      return typeof value === "boolean" ? value : false;
     case "image":
     case "video": {
       if (typeof value === "string") return { en: value, ar: value };
