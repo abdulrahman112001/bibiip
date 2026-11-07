@@ -11,6 +11,7 @@ export type HelpLink = { label: string; url: string };
 export type Field =
   | { kind: "bilingual"; label: string; multiline?: boolean }
   | { kind: "text"; label: string; helpLink?: HelpLink }
+  | { kind: "link"; label: string }
   | { kind: "number"; label: string }
   | { kind: "boolean"; label: string }
   | { kind: "image"; label: string }
@@ -27,6 +28,8 @@ export type FieldMap = Record<string, Field>;
 
 const L = (label: string, multiline = false): Field => ({ kind: "bilingual", label, multiline });
 const T = (label: string, helpLink?: HelpLink): Field => ({ kind: "text", label, helpLink });
+/** بدل ما الأدمن يكتب الرابط بنفسه، بيختاره من قائمة أقسام وصفحات الموقع الفعلية */
+const LINK = (label: string): Field => ({ kind: "link", label });
 const N = (label: string): Field => ({ kind: "number", label });
 const B = (label: string): Field => ({ kind: "boolean", label });
 const IMG = (label: string): Field => ({ kind: "image", label });
@@ -67,7 +70,7 @@ export const contentSchemas: Record<string, FieldMap> = {
       of: {
         kind: "object",
         titleField: "href",
-        fields: { href: T("الرابط (#anchor)"), label: L("النص") },
+        fields: { href: LINK("وجهة الرابط"), label: L("النص") },
       },
     },
     cta: L("زرار التحميل في الهيدر"),
@@ -279,7 +282,7 @@ export const contentSchemas: Record<string, FieldMap> = {
               kind: "object",
               titleField: "href",
               fields: {
-                href: T("الرابط (#anchor أو #contact لفتح نافذة تواصل)"),
+                href: LINK("وجهة الرابط"),
                 label: L("النص"),
               },
             },

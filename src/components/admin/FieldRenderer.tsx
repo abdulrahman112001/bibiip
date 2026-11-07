@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import type { Field, ArrayItemSchema } from "@/lib/contentSchemas";
+import { linkDestinationGroups, allLinkOptions } from "@/lib/linkDestinations";
 
 type Path = (string | number)[];
 
@@ -32,6 +33,7 @@ function defaultValueForField(field: Field): unknown {
     case "bilingual":
       return { en: "", ar: "" };
     case "text":
+    case "link":
       return "";
     case "image":
     case "video":
@@ -107,6 +109,10 @@ export default function FieldRenderer({ field, value, path, onChange }: Props) {
         )}
       </div>
     );
+  }
+
+  if (field.kind === "link") {
+    return <LinkField label={field.label} value={(value as string) ?? ""} onChange={(v) => onChange(path, v)} />;
   }
 
   if (field.kind === "number") {
@@ -307,6 +313,70 @@ function ArrayItemFields({
       {Object.entries(schema.fields).map(([key, f]) => (
         <FieldRenderer key={key} field={f} value={v[key]} path={[...path, key]} onChange={onChange} />
       ))}
+    </div>
+  );
+}
+
+/** بدل خانة نص حرة، الأدمن بيختار وجهة الرابط من قائمة أقسام وصفحات الموقع الفعلية */
+function LinkField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const isKnown = allLinkOptions.some((o) => o.value === value);
+  const [custom, setCustom] = useState(!isKnown && value !== "");
+
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-bold text-slate-700">{label}</label>
+      {!custom ? (
+        <select
+          value={isKnown ? value : ""}
+          onChange={(e) => {
+            if (e.target.value === "__custom__") {
+              setCustom(true);
+              return;
+            }
+            onChange(e.target.value);
+          }}
+          className={inputClass}
+        >
+          <option value="" disabled>
+            اختار وجهة الرابط…
+          </option>
+          {linkDestinationGroups.map((group) => (
+            <optgroup key={group.label} label={group.label}>
+              {group.options.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+          <option value="__custom__">رابط مخصص (اكتبه يدويًا)…</option>
+        </select>
+      ) : (
+        <div className="flex items-center gap-2">
+          <input
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            dir="ltr"
+            placeholder="#anchor أو /page أو https://…"
+            className={inputClass}
+          />
+          <button
+            type="button"
+            onClick={() => setCustom(false)}
+            className="shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:border-brand-yellow-dark hover:text-brand-ink"
+          >
+            اختار من القائمة
+          </button>
+        </div>
+      )}
     </div>
   );
 }

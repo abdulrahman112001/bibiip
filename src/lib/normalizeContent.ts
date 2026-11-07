@@ -20,6 +20,7 @@ function normalizeValue(field: Field, value: unknown): unknown {
       return { en: "", ar: "" };
     }
     case "text":
+    case "link":
       return typeof value === "string" ? value : "";
     case "number":
       return typeof value === "number" ? value : 0;
