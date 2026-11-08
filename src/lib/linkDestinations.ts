@@ -27,7 +27,7 @@ export const linkDestinationGroups: LinkGroup[] = [
       { value: "#service-rides", label: "مشاوير" },
       { value: "#service-transport", label: "نقل" },
       { value: "#service-delivery", label: "توصيل" },
-      { value: "#service-market", label: "تسوق" },
+      { value: "#service-shopping", label: "تسوق" },
     ],
   },
   {

@@ -17,7 +17,7 @@ export default function Services({ data }: Props) {
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {data.items.map((s, i) => (
-            <Reveal key={s.key} delay={i * 0.08} variant="flip">
+            <Reveal key={s.key} delay={i * 0.08} variant="flip" repeat={false}>
               <Tilt3D className="h-full">
                 <div
                   id={`service-${s.key}`}
